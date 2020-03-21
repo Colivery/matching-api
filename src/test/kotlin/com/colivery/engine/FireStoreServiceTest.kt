@@ -8,6 +8,6 @@ internal class FireStoreServiceTest {
 
     @Test
     fun getOrderCount() {
-        assertEquals(3,FireStoreService().getOrderCount())
+        assertEquals(1,FireStoreService().getOrderCount())
     }
 }
