@@ -1,6 +1,6 @@
 package com.colivery.engine.service
 
-import com.colivery.engine.model.GeoPosition
+import com.google.cloud.firestore.GeoPoint
 import org.springframework.stereotype.Service
 
 typealias Degree = Double
@@ -10,14 +10,14 @@ fun Degree.toRadian(): Radian = this / 180 * Math.PI
 
 @Service
 class DistanceService {
-    fun calculateDistance(position: GeoPosition, position2: GeoPosition): Double {
+    fun calculateDistance(position: GeoPoint, position2: GeoPoint): Double {
         var earthRadiusKm = 6371;
 
-        var dLat = (position2.lat-position.lat).toRadian();
-        var dLon = (position2.lon-position.lon).toRadian();
+        var dLat = (position2.latitude-position.latitude).toRadian();
+        var dLon = (position2.longitude-position.longitude).toRadian();
 
-        var lat1 = position.lat.toRadian();
-        var lat2 = position2.lat.toRadian();
+        var lat1 = position.latitude.toRadian();
+        var lat2 = position2.latitude.toRadian();
 
         var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
                 Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
