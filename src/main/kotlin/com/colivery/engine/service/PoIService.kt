@@ -12,8 +12,8 @@ data class PoI(val type: PoIType, val position: GeoPoint)
 
 @Service
 class PoIService {
-    fun findPoIs(position: GeoPoint, radiusKm: Float): Array<PoI> {
-        return arrayOf();
+    fun findPoIs(position: GeoPoint, radiusKm: Float): PoI {
+        return PoI(PoIType.Pharmacy, GeoPoint(0.0, 0.0));
     }
 
     fun extractPoIs(orders: Array<Order>): Array<PoI> {
