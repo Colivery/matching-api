@@ -1,9 +1,10 @@
 package com.colivery.engine
 
 import com.colivery.engine.model.Order
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.colivery.engine.service.PoIType
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
+import com.google.cloud.firestore.GeoPoint
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.cloud.FirestoreClient
@@ -25,22 +26,23 @@ class FireStoreService {
         db = FirestoreClient.getFirestore();
     }
 
-    fun getOrderCount(): Int {
+    fun getOrders(): List<Order> {
 
-        // Create a reference to the cities collection
-        val ordersRef = db.collection("order")
+        val querySnapshot = db.collection("order")
+                .whereEqualTo("status", "to_be_delivered")
+                .get()
 
-        // Create a query against the collection.
-        val query = ordersRef.whereEqualTo("status", "to_be_delivered")
+        return querySnapshot.get().documents.map { map ->
+            Order(
+                    "1",
+                    map.get("user_id") as String,
+                    map.get("shop_name") as String,
+                    PoIType.valueOf(map.get("shop_type") as String),
+                    map.get("pickup_address") as String,
+                    map.get("pickup_location") as GeoPoint
 
-        val querySnapshot = query.get()
-
-        for (document in querySnapshot.get().documents) {
-
-        }
-
-
-        return querySnapshot.get().documents.count()
+            )
+        }.toList()
     }
 }
 
