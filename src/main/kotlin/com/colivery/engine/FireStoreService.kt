@@ -37,14 +37,15 @@ class FireStoreService {
         return querySnapshot.get().documents.map { order -> mapDocumentToOrder(order) }.toList()
     }
 
-    fun mapDocumentToOrder(document: QueryDocumentSnapshot) : Order {
+    fun mapDocumentToOrder(document: QueryDocumentSnapshot): Order {
         return Order(
                 document.reference.id,
                 document.get("user_id") as String,
                 document.get("shop_name") as String,
+                document.get("shop_address") as String,
                 PoIType.valueOf(document.get("shop_type") as String),
-                document.get("pickup_address") as String,
-                document.get("pickup_location") as GeoPoint
+                document.get("pickup_location") as GeoPoint,
+                document.get("drop_off_location") as GeoPoint
         )
     }
 }

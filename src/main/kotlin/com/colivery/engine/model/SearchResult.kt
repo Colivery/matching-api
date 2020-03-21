@@ -1,19 +1,13 @@
 package com.colivery.engine.model
 
-data class SearchResult(val order_ids: List<String>) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+import com.google.cloud.firestore.GeoPoint
 
-        other as SearchResult
+data class SearchResponse(val orderIds: List<SearchResult>)
 
-        if (order_ids != other.order_ids) return false
+data class SearchResult(val orderId: String, val distanceKm: Double, val activitySequence: List<Activity>)
 
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return order_ids.hashCode()
-    }
-
+enum class ActivityType {
+    navigate, drop_off, pickup
 }
+
+data class Activity(val location: GeoPoint, val type: ActivityType, val shopName: String?, val shopAddress: String?)
