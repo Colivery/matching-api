@@ -1,11 +1,11 @@
 package com.colivery.engine.service.poi.osm
 
+import com.colivery.engine.model.Coordinate
 import com.colivery.engine.service.PoI
 import com.colivery.engine.service.PoIType
 import com.colivery.engine.service.poi.PoiSearchService
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.google.cloud.firestore.GeoPoint
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
@@ -31,7 +31,7 @@ data class Response(val elements: Array<Element>) {
 data class Element(val tags: Tag, val lat: Double, val lon: Double)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class Tag(val shop: String?, val name: String, val amenity: String?) {
+data class Tag(val shop: String?, val name: String?, val amenity: String?) {
     @JsonAlias("addr:street")
     val street: String = ""
     @JsonAlias("addr:housenumber")
@@ -46,7 +46,7 @@ data class Tag(val shop: String?, val name: String, val amenity: String?) {
 
 @Service
 class Overpass : PoiSearchService {
-    override fun findPoIs(position: GeoPoint, radiusKm: Float): Array<PoI> {
+    override fun findPoIs(position: Coordinate, radiusKm: Float): Array<PoI> {
         val quote: Response? = RestTemplate().postForObject("https://overpass-api.de/api/interpreter",
                 getRequestBody(position, radiusKm),
                 Response::class.java)
@@ -61,12 +61,12 @@ class Overpass : PoiSearchService {
 
     private fun buildPoi(element: Element): PoI {
         return PoI(if (element.tags.shop != null) PoIType.Supermarket else PoIType.Pharmacy,
-                GeoPoint(element.lat, element.lon),
+                Coordinate(element.lat, element.lon),
                 element.tags.street + " " + element.tags.number + " " + element.tags.postcode + " " + element.tags.city,
-                element.tags.name)
+                element.tags.name ?: "")
     }
 
-    private fun getRequestBody(position: GeoPoint, radiusKm: Float): String {
+    private fun getRequestBody(position: Coordinate, radiusKm: Float): String {
         var degreeDelta = radiusKm / 111.0F
         var latN = position.latitude - degreeDelta
         var latS = position.latitude + degreeDelta
@@ -78,6 +78,7 @@ class Overpass : PoiSearchService {
                 "[bbox:" + latN + "," + lonL + "," + latS + "," + lonR + "];\n" +
                 "( nwr[amenity=pharmacy];\n" +
                 "  nwr[shop=supermarket];\n" +
+                //"  nwr[shop=convenience];\n" +
                 " );\n" +
                 "out center;"
     }

@@ -1,7 +1,5 @@
 package com.colivery.engine.model
 
-import com.google.cloud.firestore.GeoPoint
-
 data class SearchResponse(val orderIds: List<SearchResult>)
 
 data class SearchResult(val orderId: String, val distanceKm: Double, val activitySequence: List<Activity>)

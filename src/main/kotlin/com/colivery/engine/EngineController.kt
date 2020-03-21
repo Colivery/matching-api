@@ -5,7 +5,6 @@ import com.colivery.engine.service.DistanceService
 import com.colivery.engine.service.PoI
 import com.colivery.engine.service.PoIService
 import com.colivery.engine.service.poi.PoiSearchService
-import com.google.cloud.firestore.GeoPoint
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,7 +21,7 @@ class EngineController {
 
     @GetMapping("/")
     fun get(): Array<PoI> {
-        return poiSearchService.findPoIs(GeoPoint(48.16058943132621,11.565932035446167), 2.0F)
+        return poiSearchService.findPoIs(Coordinate(48.16058943132621, 11.565932035446167), 2.0F)
     }
 
     @Autowired
@@ -37,20 +36,24 @@ class EngineController {
         val startLocation = request.position
         val radius = request.radiusKm
 
-        val resultList = fireStoreService.getAllOrdersWithStateToBeDelivered()
+        val orders = fireStoreService.getAllOrdersWithStateToBeDelivered()
+
+        val allPoIs = poiSearchService.findPoIs(startLocation, radius).toMutableList()
+        allPoIs.addAll(poiService.extractPoIs(orders))
+
+        val resultList = orders
                 .asSequence()
                 .filter { order -> distanceService.calculateDistance(startLocation, order.dropOffLocation) <= radius }
                 .map { order ->
-                    buildSearchResult(startLocation, radius, order)
+                    buildSearchResult(startLocation, order, allPoIs)
                 }
-                .filter { result -> result.distanceKm <= radius }
                 .sortedBy { result -> result.distanceKm }
                 .toList()
 
         return SearchResponse(resultList)
     }
 
-    fun buildSearchResult(startLocation: Coordinate, radius: Float, order: Order): SearchResult {
+    fun buildSearchResult(startLocation: Coordinate, order: Order, allPoIs: List<PoI>): SearchResult {
 
         val firstActivity = Activity(startLocation, ActivityType.navigate, null, null)
         val pickupLocation: Coordinate
@@ -58,14 +61,14 @@ class EngineController {
         val shopAddress: String
 
         if (order.pickupLocation == null) {
-            val poi = poiService.findPoINearby(firstActivity.location, radius, order.shopType)
+            val poi = poiService.findBestPoI(startLocation, order.dropOffLocation, order.shopType, allPoIs)
             shopName = poi.name
             shopAddress = poi.address
             pickupLocation = poi.location
         } else {
-            shopName = order.shopName!!
-            shopAddress = order.shopAddress!!
-            pickupLocation = order.pickupLocation!!
+            shopName = order.shopName ?: ""
+            shopAddress = order.shopAddress ?: ""
+            pickupLocation = order.pickupLocation
         }
 
         val distance = distanceService.calculateDistance(startLocation, pickupLocation)
