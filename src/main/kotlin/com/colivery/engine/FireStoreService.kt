@@ -26,7 +26,7 @@ class FireStoreService {
         db = FirestoreClient.getFirestore();
     }
 
-    fun getOrders(): List<Order> {
+    fun getAllOrdersWithStateToBeDelivered(): List<Order> {
 
         val querySnapshot = db.collection("order")
                 .whereEqualTo("status", "to_be_delivered")
