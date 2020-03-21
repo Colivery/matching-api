@@ -5,7 +5,7 @@ import com.google.cloud.firestore.GeoPoint
 import org.springframework.stereotype.Service
 
 enum class PoIType {
-    Supermarket, Pharmacy, grocery
+    Supermarket, Pharmacy
 }
 
 data class PoI(val type: PoIType, val location: GeoPoint, val address: String, val name: String)
@@ -19,7 +19,10 @@ class PoIService {
     fun extractPoIs(orders: Array<Order>): Array<PoI> {
         return orders
                 .filter { order -> order.pickupLocation != null }
-                .map { order -> PoI(order.shopType, order.pickupLocation as GeoPoint, "", "") }
+                .map { order ->
+                    PoI(order.shopType, order.pickupLocation as GeoPoint,
+                            order.shopAddress as String, order.shopName as String)
+                }
                 .toTypedArray();
     }
 }

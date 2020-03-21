@@ -2,9 +2,12 @@ package com.colivery.engine
 
 import com.colivery.engine.model.*
 import com.colivery.engine.service.DistanceService
+import com.colivery.engine.service.PoI
 import com.colivery.engine.service.PoIService
+import com.colivery.engine.service.poi.PoiSearchService
 import com.google.cloud.firestore.GeoPoint
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -13,6 +16,14 @@ import org.springframework.web.bind.annotation.RestController
 class EngineController {
     @Autowired
     lateinit var poiService: PoIService
+
+    @Autowired
+    lateinit var poiSearchService: PoiSearchService
+
+    @GetMapping("/")
+    fun get(): Array<PoI> {
+        return poiSearchService.findPoIs(GeoPoint(48.16058943132621,11.565932035446167), 2.0F)
+    }
 
     @Autowired
     lateinit var distanceService: DistanceService
