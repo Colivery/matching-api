@@ -19,7 +19,7 @@ class PoIService {
     fun extractPoIs(orders: Array<Order>): Array<PoI> {
         return orders
                 .filter { order -> order.pickup_location != null }
-                .map { order -> PoI(order.shop_type, order.pickup_location) }
+                .map { order -> PoI(order.shop_type, order.pickup_location as GeoPosition) }
                 .toTypedArray();
     }
 }

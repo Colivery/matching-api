@@ -28,14 +28,14 @@ data class GeoPosition(val lat: Degree, val lon: Degree)
 
 data class Order(val id: String,
                  val user_id: String,
-                 val driver_user_id: String,
-                 val shop_name: String,
+                 val driver_user_id: String?,
+                 val shop_name: String?,
                  val shop_type: PoIType,
-                 val pickup_address: String,
-                 val pickup_location: GeoPosition,
+                 val pickup_address: String?,
+                 val pickup_location: GeoPosition?,
                  val products: Array<OrderItem>,
                  val status: OrderStatus,
-                 val hint: String,
+                 val hint: String?,
                  val created: String,
                  val updated: String) {
     override fun equals(other: Any?): Boolean {
