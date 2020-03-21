@@ -1,129 +1,124 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+# Created by https://www.gitignore.io/api/java,gradle,eclipse,intellij
 
-# C extensions
-*.so
+### Java ###
+*.class
 
-# Distribution / packaging
-.Python
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+
+### Gradle ###
+.gradle
 build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+# Ignore Gradle GUI config
+gradle-app.setting
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
+# Cache of project
+.gradletasknamecache
 
-# Translations
-*.mo
-*.pot
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
+### Eclipse ###
+*.pydevproject
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
 
-# Flask stuff:
-instance/
-.webassets-cache
+# Eclipse Core
+.project
 
-# Scrapy stuff:
-.scrapy
+# External tool builders
+.externalToolBuilders/
 
-# Sphinx documentation
-docs/_build/
+# Locally stored "Eclipse launch configurations"
+*.launch
 
-# PyBuilder
-target/
+# CDT-specific
+.cproject
 
-# Jupyter Notebook
-.ipynb_checkpoints
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
 
-# IPython
-profile_default/
-ipython_config.py
+# Java annotation processor (APT)
+.factorypath
 
-# pyenv
-.python-version
+# PDT-specific
+.buildpath
 
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
+# sbteclipse plugin
+.target
 
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
-__pypackages__/
+# TeXlipse plugin
+.texlipse
 
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
+# STS (Spring Tool Suite)
+.springBeans
 
-# SageMath parsed files
-*.sage.py
 
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+### Intellij ###
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
 
-# Spyder project settings
-.spyderproject
-.spyproject
+*.iml
 
-# Rope project settings
-.ropeproject
+## Directory-based project format:
+.idea/
+# if you remove the above rule, at least ignore the following:
 
-# mkdocs documentation
-/site
+# User-specific stuff:
+# .idea/workspace.xml
+# .idea/tasks.xml
+# .idea/dictionaries
+# .idea/shelf
 
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
+# Sensitive or high-churn files:
+# .idea/dataSources.ids
+# .idea/dataSources.xml
+# .idea/sqlDataSources.xml
+# .idea/dynamic.xml
+# .idea/uiDesigner.xml
 
-# Pyre type checker
-.pyre/
+# Gradle:
+# .idea/gradle.xml
+# .idea/libraries
+
+# Mongo Explorer plugin:
+# .idea/mongoSettings.xml
+
+## File-based project format:
+*.ipr
+*.iws
+
+## Plugin-specific files:
+
+# IntelliJ
+/out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
