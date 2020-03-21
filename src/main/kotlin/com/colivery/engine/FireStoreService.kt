@@ -32,15 +32,14 @@ class FireStoreService {
                 .whereEqualTo("status", "to_be_delivered")
                 .get()
 
-        return querySnapshot.get().documents.map { map ->
+        return querySnapshot.get().documents.map { document ->
             Order(
-                    "1",
-                    map.get("user_id") as String,
-                    map.get("shop_name") as String,
-                    PoIType.valueOf(map.get("shop_type") as String),
-                    map.get("pickup_address") as String,
-                    map.get("pickup_location") as GeoPoint
-
+                    document.reference.id,
+                    document.get("user_id") as String,
+                    document.get("shop_name") as String,
+                    PoIType.valueOf(document.get("shop_type") as String),
+                    document.get("pickup_address") as String,
+                    document.get("pickup_location") as GeoPoint
             )
         }.toList()
     }
