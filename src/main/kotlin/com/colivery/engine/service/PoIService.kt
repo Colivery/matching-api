@@ -20,10 +20,11 @@ class PoIService {
     fun findBestPoI(start: Coordinate, dropOff: Coordinate, type: PoIType, allPoIs: List<PoI>): PoI {
         var pois = allPoIs.filter { poi -> poi.type == type }
 
-        return pois.minBy { poi ->
-            distanceService.calculateDistance(start, poi.location)
-            +distanceService.calculateDistance(poi.location, dropOff)
-        } as PoI
+        val minBy = pois
+                .minBy { poi ->
+                    distanceService.calculateDistance(start, poi.location) + distanceService.calculateDistance(poi.location, dropOff)
+                }
+        return minBy as PoI
     }
 
     fun extractPoIs(orders: List<Order>): Array<PoI> {
