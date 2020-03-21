@@ -1,5 +1,6 @@
 package com.colivery.engine
 
+import com.colivery.engine.model.Coordinate
 import com.colivery.engine.model.Order
 import com.colivery.engine.service.PoIType
 import com.google.auth.oauth2.GoogleCredentials
@@ -38,15 +39,27 @@ class FireStoreService {
     }
 
     fun mapDocumentToOrder(document: QueryDocumentSnapshot): Order {
+        val pickupLocation = document.get("pickup_location") as GeoPoint?
+        val dropOffLocation = document.get("dropoff_location") as GeoPoint?
+
+
         return Order(
                 document.reference.id,
-                document.get("user_id") as String,
-                document.get("shop_name") as String,
-                document.get("shop_address") as String,
-                PoIType.valueOf(document.get("shop_type") as String),
-                document.get("pickup_location") as GeoPoint,
-                document.get("drop_off_location") as GeoPoint
+                (document.get("user_id") as String?)!!,
+                document.get("shop_name") as String?,
+                document.get("shop_address") as String?,
+                PoIType.valueOf((document.get("shop_type") as String?)!!),
+                geoPointToCoordinate(pickupLocation),
+                Coordinate(dropOffLocation!!.latitude, dropOffLocation.longitude)
         )
+    }
+
+    fun geoPointToCoordinate(geoPoint: GeoPoint?): Coordinate? {
+        return if (geoPoint != null) {
+            Coordinate(geoPoint.latitude, geoPoint.longitude)
+        } else {
+            null
+        }
     }
 }
 

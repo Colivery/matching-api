@@ -10,4 +10,4 @@ enum class ActivityType {
     navigate, drop_off, pickup
 }
 
-data class Activity(val location: GeoPoint, val type: ActivityType, val shopName: String?, val shopAddress: String?)
+data class Activity(val location: Coordinate, val type: ActivityType, val shopName: String?, val shopAddress: String?)

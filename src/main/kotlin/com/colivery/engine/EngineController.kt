@@ -39,10 +39,10 @@ class EngineController {
         return SearchResponse(resultList)
     }
 
-    fun buildSearchResult(startLocation: GeoPoint, radius: Float, order: Order): SearchResult {
+    fun buildSearchResult(startLocation: Coordinate, radius: Float, order: Order): SearchResult {
 
         val firstActivity = Activity(startLocation, ActivityType.navigate, null, null)
-        val pickupLocation: GeoPoint
+        val pickupLocation: Coordinate
         val shopName: String
         val shopAddress: String
 
