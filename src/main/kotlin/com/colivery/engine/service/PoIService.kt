@@ -12,7 +12,7 @@ data class PoI(val type: PoIType, val location: GeoPoint, val address: String, v
 
 @Service
 class PoIService {
-    fun findPoIs(position: GeoPoint, radiusKm: Float): PoI {
+    fun findPoINearby(startLocation: GeoPoint, radiusKm: Float, type: PoIType): PoI {
         return PoI(PoIType.Pharmacy, GeoPoint(0.0, 0.0), "", "null");
     }
 

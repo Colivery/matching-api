@@ -23,14 +23,16 @@ class EngineController {
     @PostMapping("/search")
     fun search(@RequestBody request: SearchRequest): SearchResponse? {
 
-        val position = request.position
+        val startLocation = request.position
         val radius = request.radiusKm
 
         val resultList = fireStoreService.getAllOrdersWithStateToBeDelivered()
+                .asSequence()
+                .filter { order -> distanceService.calculateDistance(startLocation, order.dropOffLocation) <= radius }
                 .map { order ->
-                    buildSearchResult(position, radius, order)
+                    buildSearchResult(startLocation, radius, order)
                 }
-                .filter { result -> result.distanceKm < radius }
+                .filter { result -> result.distanceKm <= radius }
                 .sortedBy { result -> result.distanceKm }
                 .toList()
 
@@ -45,7 +47,7 @@ class EngineController {
         val shopAddress: String
 
         if (order.pickupLocation == null) {
-            val poi = poiService.findPoIs(firstActivity.location, radius)
+            val poi = poiService.findPoINearby(firstActivity.location, radius, order.shopType)
             shopName = poi.name
             shopAddress = poi.address
             pickupLocation = poi.location
