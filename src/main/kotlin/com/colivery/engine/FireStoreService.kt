@@ -5,11 +5,13 @@ import com.colivery.engine.service.PoIType
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.GeoPoint
+import com.google.cloud.firestore.QueryDocumentSnapshot
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.cloud.FirestoreClient
+import org.springframework.stereotype.Service
 
-
+@Service
 class FireStoreService {
 
     val db: Firestore
@@ -32,16 +34,19 @@ class FireStoreService {
                 .whereEqualTo("status", "to_be_delivered")
                 .get()
 
-        return querySnapshot.get().documents.map { document ->
-            Order(
-                    document.reference.id,
-                    document.get("user_id") as String,
-                    document.get("shop_name") as String,
-                    PoIType.valueOf(document.get("shop_type") as String),
-                    document.get("pickup_address") as String,
-                    document.get("pickup_location") as GeoPoint
-            )
-        }.toList()
+        return querySnapshot.get().documents.map { order -> mapDocumentToOrder(order) }.toList()
+    }
+
+    fun mapDocumentToOrder(document: QueryDocumentSnapshot): Order {
+        return Order(
+                document.reference.id,
+                document.get("user_id") as String,
+                document.get("shop_name") as String,
+                document.get("shop_address") as String,
+                PoIType.valueOf(document.get("shop_type") as String),
+                document.get("pickup_location") as GeoPoint,
+                document.get("drop_off_location") as GeoPoint
+        )
     }
 }
 
