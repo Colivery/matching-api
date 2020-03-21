@@ -13,8 +13,8 @@ class DistanceService {
     fun calculateDistance(position: Coordinate, position2: Coordinate): Double {
         var earthRadiusKm = 6371;
 
-        var dLat = (position2.latitude - position.latitude).toRadian();
-        var dLon = (position2.longitude - position.longitude).toRadian();
+        var dLat = (Math.abs(position2.latitude - position.latitude)).toRadian();
+        var dLon = (Math.abs(position2.longitude - position.longitude)).toRadian();
 
         var lat1 = position.latitude.toRadian();
         var lat2 = position2.latitude.toRadian();
