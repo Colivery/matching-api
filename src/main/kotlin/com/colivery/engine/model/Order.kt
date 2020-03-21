@@ -5,7 +5,7 @@ import com.colivery.engine.service.PoIType
 data class Order(val id: String,
                  val userId: String,
                  val shopName: String?,
-                 val shopAddress: String?,
+                 val pickupAddress: String?,
                  val shopType: PoIType,
                  val pickupLocation: Coordinate?,
                  val dropOffLocation: Coordinate
@@ -20,7 +20,7 @@ data class Order(val id: String,
         if (id != other.id) return false
         if (userId != other.userId) return false
         if (shopName != other.shopName) return false
-        if (shopAddress != other.shopAddress) return false
+        if (pickupAddress != other.pickupAddress) return false
         if (shopType != other.shopType) return false
         if (pickupLocation != other.pickupLocation) return false
         if (dropOffLocation != other.dropOffLocation) return false
@@ -32,7 +32,7 @@ data class Order(val id: String,
         var result = id.hashCode()
         result = 31 * result + userId.hashCode()
         result = 31 * result + (shopName?.hashCode() ?: 0)
-        result = 31 * result + (shopAddress?.hashCode() ?: 0)
+        result = 31 * result + (pickupAddress?.hashCode() ?: 0)
         result = 31 * result + shopType.hashCode()
         result = 31 * result + (pickupLocation?.hashCode() ?: 0)
         result = 31 * result + dropOffLocation.hashCode()

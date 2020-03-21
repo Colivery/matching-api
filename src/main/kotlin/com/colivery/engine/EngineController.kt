@@ -33,8 +33,8 @@ class EngineController {
     @PostMapping("/search")
     fun search(@RequestBody request: SearchRequest): SearchResponse? {
 
-        val startLocation = request.position
-        val radius = request.radiusKm
+        val startLocation = request.coordinate
+        val radius = request.range
 
         val orders = fireStoreService.getAllOrdersWithStateToBeDelivered()
 
@@ -67,7 +67,7 @@ class EngineController {
             pickupLocation = poi.location
         } else {
             shopName = order.shopName ?: ""
-            shopAddress = order.shopAddress ?: ""
+            shopAddress = order.pickupAddress ?: ""
             pickupLocation = order.pickupLocation
         }
 

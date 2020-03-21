@@ -47,7 +47,7 @@ class FireStoreService {
                 document.reference.id,
                 (document.get("user_id") as String?)!!,
                 document.get("shop_name") as String?,
-                document.get("shop_address") as String?,
+                document.get("pickup_address") as String?,
                 PoIType.valueOf((document.get("shop_type") as String?)!!),
                 geoPointToCoordinate(pickupLocation),
                 Coordinate(dropOffLocation!!.latitude, dropOffLocation.longitude)
