@@ -1,15 +1,14 @@
 package com.colivery.engine.model
 
 import com.colivery.engine.service.PoIType
-import com.google.cloud.firestore.GeoPoint
 
 data class Order(val id: String,
                  val userId: String,
                  val shopName: String?,
                  val shopAddress: String?,
                  val shopType: PoIType,
-                 val pickupLocation: GeoPoint?,
-                 val dropOffLocation: GeoPoint
+                 val pickupLocation: Coordinate?,
+                 val dropOffLocation: Coordinate
 ) {
 
     override fun equals(other: Any?): Boolean {
@@ -39,5 +38,6 @@ data class Order(val id: String,
         result = 31 * result + dropOffLocation.hashCode()
         return result
     }
+
 
 }
