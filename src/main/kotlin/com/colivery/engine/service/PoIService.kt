@@ -31,7 +31,7 @@ class PoIService {
                 .filter { order -> order.pickupLocation != null }
                 .map { order ->
                     PoI(order.shopType, order.pickupLocation as Coordinate,
-                            order.shopAddress ?: "", order.shopName ?: "")
+                            order.pickupAddress ?: "", order.shopName ?: "")
                 }
                 .toTypedArray();
     }
