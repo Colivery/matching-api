@@ -3,7 +3,6 @@ package com.colivery.engine
 import com.colivery.engine.model.*
 import com.colivery.engine.service.DistanceService
 import com.colivery.engine.service.PoIService
-import com.google.cloud.firestore.GeoPoint
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -53,7 +52,7 @@ class EngineController {
             pickupLocation = poi.location
         } else {
             shopName = order.shopName!!
-            shopAddress = order.shopAddress!!
+            shopAddress = order.pickupAddress!!
             pickupLocation = order.pickupLocation!!
         }
 
