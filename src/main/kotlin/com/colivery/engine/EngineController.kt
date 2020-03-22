@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
-@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @RestController
 @RequestMapping("/search")
 class EngineController {
@@ -41,7 +40,6 @@ class EngineController {
     @Autowired
     lateinit var fireStoreService: FireStoreService
 
-    @CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
     @PostMapping("/query")
     fun search(@RequestBody @Valid request: SearchRequest): SearchResponse? {
         logger.info("POST /search/query $request")
