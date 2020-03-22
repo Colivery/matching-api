@@ -13,7 +13,7 @@ build:
   artifacts:
     expire_in: 24 hour
     paths:
-      - build/libs/api-*.jar
+      - target/api-*.jar
   tags:
     - s0ra
 
