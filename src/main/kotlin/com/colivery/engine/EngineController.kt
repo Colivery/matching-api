@@ -4,6 +4,8 @@ import com.colivery.engine.model.*
 import com.colivery.engine.service.DistanceService
 import com.colivery.engine.service.PoIService
 import com.colivery.engine.service.poi.PoiSearchService
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,6 +15,9 @@ import javax.validation.Valid
 
 @RestController
 class EngineController {
+
+    private val logger: Logger = LoggerFactory.getLogger(EngineController::class.java)
+
     @Autowired
     lateinit var poiService: PoIService
 
@@ -21,6 +26,7 @@ class EngineController {
 
     @GetMapping("/")
     fun get(): Array<PoI> {
+        logger.info("GET /")
         return poiSearchService.findPoIs(Coordinate(48.16058943132621, 11.565932035446167), 2.0F)
     }
 
@@ -32,6 +38,7 @@ class EngineController {
 
     @PostMapping("/search")
     fun search(@RequestBody @Valid request: SearchRequest): SearchResponse? {
+        logger.info("GET /search $request")
 
         val startLocation = request.coordinate
         val radius = request.range
