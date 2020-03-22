@@ -1,9 +1,8 @@
-package com.colivery.engine
+package com.colivery.engine.service
 
-import com.colivery.engine.model.Coordinate
 import com.colivery.engine.model.Order
+import com.colivery.engine.toOrder
 import com.google.cloud.firestore.Firestore
-import com.google.cloud.firestore.GeoPoint
 import org.springframework.stereotype.Service
 
 @Service
