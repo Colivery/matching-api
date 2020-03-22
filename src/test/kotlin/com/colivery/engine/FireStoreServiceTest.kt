@@ -7,6 +7,6 @@ internal class FireStoreServiceTest {
 
     //@Test
     fun getAllOrdersWithStateToBeDelivered() {
-        assertEquals(1, FireStoreService().getAllOrdersWithStateToBeDelivered().count())
+//        assertEquals(1, FireStoreService().getAllOrdersWithStateToBeDelivered().count())
     }
 }
