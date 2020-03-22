@@ -82,7 +82,7 @@ deploy automatically on master:
   after_script:
     - "docker logout $CI_REGISTRY"
   only:
-    - tags
+    - master
   tags:
     - s0ra
 
