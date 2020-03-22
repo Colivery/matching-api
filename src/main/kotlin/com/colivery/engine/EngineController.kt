@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
+@RequestMapping("/search")
 class EngineController {
 
     private val logger: Logger = LoggerFactory.getLogger(EngineController::class.java)
@@ -24,9 +26,9 @@ class EngineController {
     @Autowired
     lateinit var poiSearchService: PoiSearchService
 
-    @GetMapping("/")
+    @GetMapping
     fun get(): Array<PoI> {
-        logger.info("GET /")
+        logger.info("GET /search")
         return poiSearchService.findPoIs(Coordinate(48.16058943132621, 11.565932035446167), 2.0F)
     }
 
@@ -36,9 +38,9 @@ class EngineController {
     @Autowired
     lateinit var fireStoreService: FireStoreService
 
-    @PostMapping("/search")
+    @PostMapping("/query")
     fun search(@RequestBody @Valid request: SearchRequest): SearchResponse? {
-        logger.info("GET /search $request")
+        logger.info("GET /search/query $request")
 
         val startLocation = request.coordinate
         val radius = request.range
