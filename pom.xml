@@ -89,6 +89,12 @@
 			<artifactId>mockk</artifactId>
 			<version>1.9.3</version>
 		</dependency>
+		<dependency>
+			<groupId>com.xlvecle</groupId>
+			<artifactId>geohash-poly</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

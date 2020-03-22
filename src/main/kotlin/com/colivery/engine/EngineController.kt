@@ -37,7 +37,7 @@ class EngineController {
         "http://localhost:4444",
         "https://colivery.app",
         "https://colivery-app.web.app",
-        "colivery-app.firebaseapp.com"
+        "https://colivery-app.firebaseapp.com"
     ])
     @PostMapping("/query")
     fun search(@RequestBody @Valid request: SearchRequest): SearchResponse? {
