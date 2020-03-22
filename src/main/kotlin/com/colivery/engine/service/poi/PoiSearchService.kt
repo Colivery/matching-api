@@ -5,5 +5,5 @@ import com.colivery.engine.model.PoI
 import com.colivery.engine.model.PoIType
 
 interface PoiSearchService {
-    fun findPoIs(position: Coordinate, radiusKm: Float, poiTypes: List<PoIType>): List<PoI>
+    fun findPoIs(position: Coordinate, radiusKm: Float, poiTypes: Set<PoIType>): List<PoI>
 }

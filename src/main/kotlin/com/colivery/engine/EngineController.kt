@@ -45,7 +45,7 @@ class EngineController {
 
         val orderPoIs = poiService.extractPoIs(orders)
 
-        val orderPoITypes = orders.map { order -> order.shopType }
+        val orderPoITypes = orders.map { order -> order.shopType }.toSet()
         val allPoIs = poiSearchService.findPoIs(startLocation, radius, orderPoITypes).toMutableList()
         allPoIs.addAll(orderPoIs)
 

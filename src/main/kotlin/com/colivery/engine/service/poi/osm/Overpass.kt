@@ -50,7 +50,7 @@ data class Tag(val shop: String?, val name: String?, val amenity: String?) {
 
 @Service
 class Overpass : PoiSearchService {
-    override fun findPoIs(position: Coordinate, radiusKm: Float, poiTypes: List<PoIType>): List<PoI> {
+    override fun findPoIs(position: Coordinate, radiusKm: Float, poiTypes: Set<PoIType>): List<PoI> {
         val quote: Response? = RestTemplate().postForObject("https://overpass-api.de/api/interpreter",
                 getRequestBody(position, radiusKm, poiTypes),
                 Response::class.java)
@@ -93,7 +93,7 @@ class Overpass : PoiSearchService {
         return PoIType.supermarket
     }
 
-    private fun getRequestBody(position: Coordinate, radiusKm: Float, poiTypes: List<PoIType>): String {
+    private fun getRequestBody(position: Coordinate, radiusKm: Float, poiTypes: Set<PoIType>): String {
         var degreeDelta = radiusKm / 111.0F
         var latN = position.latitude - degreeDelta
         var latS = position.latitude + degreeDelta
@@ -109,7 +109,7 @@ class Overpass : PoiSearchService {
                 "out center;"
     }
 
-    private fun buildOSMPoITypeRequestString(poiTypes: List<PoIType>): String {
+    private fun buildOSMPoITypeRequestString(poiTypes: Set<PoIType>): String {
         val result = StringBuilder()
         poiTypes.forEach {
             if (it == PoIType.Pharmacy || it == PoIType.pharmacy) {
