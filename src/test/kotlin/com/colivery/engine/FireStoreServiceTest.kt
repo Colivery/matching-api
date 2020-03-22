@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 
 internal class FireStoreServiceTest {
 
-    @Test
+    //@Test
     fun getAllOrdersWithStateToBeDelivered() {
         assertEquals(1, FireStoreService().getAllOrdersWithStateToBeDelivered().count())
     }
