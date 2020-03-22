@@ -1,6 +1,13 @@
 package com.colivery.engine
 
-import com.colivery.engine.model.*
+import com.colivery.engine.model.Activity
+import com.colivery.engine.model.ActivityType
+import com.colivery.engine.model.Coordinate
+import com.colivery.engine.model.Order
+import com.colivery.engine.model.PoI
+import com.colivery.engine.model.SearchRequest
+import com.colivery.engine.model.SearchResponse
+import com.colivery.engine.model.SearchResult
 import com.colivery.engine.service.DistanceService
 import com.colivery.engine.service.FireStoreService
 import com.colivery.engine.service.PoIService
@@ -15,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
+@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @RestController
 @RequestMapping("/search")
 class EngineController {
@@ -33,12 +41,7 @@ class EngineController {
     @Autowired
     lateinit var fireStoreService: FireStoreService
 
-    @CrossOrigin(origins = [
-        "http://localhost:4444",
-        "https://colivery.app",
-        "https://colivery-app.web.app",
-        "https://colivery-app.firebaseapp.com"
-    ])
+    @CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
     @PostMapping("/query")
     fun search(@RequestBody @Valid request: SearchRequest): SearchResponse? {
         logger.info("POST /search/query $request")
