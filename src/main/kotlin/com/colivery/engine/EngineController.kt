@@ -8,6 +8,7 @@ import com.colivery.engine.service.poi.PoiSearchService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -32,6 +33,12 @@ class EngineController {
     @Autowired
     lateinit var fireStoreService: FireStoreService
 
+    @CrossOrigin(origins = [
+        "http://localhost:4444",
+        "https://colivery.app",
+        "https://colivery-app.web.app",
+        "colivery-app.firebaseapp.com"
+    ])
     @PostMapping("/query")
     fun search(@RequestBody @Valid request: SearchRequest): SearchResponse? {
         logger.info("POST /search/query $request")
