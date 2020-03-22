@@ -1,7 +1,5 @@
 package com.colivery.engine.model
 
-import com.colivery.engine.service.PoIType
-
 data class Order(val id: String,
                  val userId: String,
                  val shopName: String?,

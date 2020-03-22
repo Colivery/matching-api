@@ -2,7 +2,7 @@ package com.colivery.engine
 
 import com.colivery.engine.model.Coordinate
 import com.colivery.engine.model.Order
-import com.colivery.engine.service.PoIType
+import com.colivery.engine.model.PoIType
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.GeoPoint

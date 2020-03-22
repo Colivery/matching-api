@@ -2,14 +2,10 @@ package com.colivery.engine.service
 
 import com.colivery.engine.model.Coordinate
 import com.colivery.engine.model.Order
+import com.colivery.engine.model.PoI
+import com.colivery.engine.model.PoIType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-
-enum class PoIType {
-    Supermarket, Pharmacy, grocery
-}
-
-data class PoI(val type: PoIType, val location: Coordinate, val address: String, val name: String)
 
 @Service
 class PoIService {
@@ -22,7 +18,7 @@ class PoIService {
 
         val minBy = pois
                 .minBy { poi ->
-                    distanceService.calculateDistance(start, poi.location) + distanceService.calculateDistance(poi.location, dropOff)
+                    distanceService.calculateDistance(start, poi.coordinate) + distanceService.calculateDistance(poi.coordinate, dropOff)
                 }
         return minBy as PoI
     }

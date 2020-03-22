@@ -1,8 +1,8 @@
 package com.colivery.engine.service.poi.osm
 
 import com.colivery.engine.model.Coordinate
-import com.colivery.engine.service.PoI
-import com.colivery.engine.service.PoIType
+import com.colivery.engine.model.PoI
+import com.colivery.engine.model.PoIType
 import com.colivery.engine.service.poi.PoiSearchService
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
@@ -74,7 +74,7 @@ class Overpass : PoiSearchService {
         var lonL = position.longitude - degreeDelta
         var lonR = position.longitude + degreeDelta
 
-        return "[out:json]\n" +
+        return "[out:json][timeout:25]\n" +
                 "[bbox:" + latN + "," + lonL + "," + latS + "," + lonR + "];\n" +
                 "( nwr[amenity=pharmacy];\n" +
                 "  nwr[shop=supermarket];\n" +
