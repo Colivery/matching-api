@@ -9,10 +9,12 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
+@RequestMapping("/search")
 class EngineController {
 
     private val logger: Logger = LoggerFactory.getLogger(EngineController::class.java)
@@ -29,9 +31,9 @@ class EngineController {
     @Autowired
     lateinit var fireStoreService: FireStoreService
 
-    @PostMapping("/search")
+    @PostMapping("/query")
     fun search(@RequestBody @Valid request: SearchRequest): SearchResponse? {
-        logger.info("POST /search $request")
+        logger.info("POST /search/query $request")
 
         val startLocation = request.coordinate
         val radius = request.range
