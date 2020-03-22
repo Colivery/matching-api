@@ -26,12 +26,6 @@ class EngineController {
     @Autowired
     lateinit var poiSearchService: PoiSearchService
 
-    @GetMapping
-    fun get(): Array<PoI> {
-        logger.info("GET /search")
-        return poiSearchService.findPoIs(Coordinate(48.16058943132621, 11.565932035446167), 2.0F)
-    }
-
     @Autowired
     lateinit var distanceService: DistanceService
 
