@@ -2,6 +2,7 @@ package com.colivery.engine
 
 import com.colivery.engine.model.*
 import com.colivery.engine.service.DistanceService
+import com.colivery.engine.service.FireStoreService
 import com.colivery.engine.service.PoIService
 import com.colivery.engine.service.poi.PoiSearchService
 import org.slf4j.Logger
