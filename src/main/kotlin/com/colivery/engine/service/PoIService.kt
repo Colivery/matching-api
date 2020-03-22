@@ -23,13 +23,12 @@ class PoIService {
         return minBy as PoI
     }
 
-    fun extractPoIs(orders: List<Order>): Array<PoI> {
+    fun extractPoIs(orders: List<Order>): List<PoI> {
         return orders
                 .filter { order -> order.pickupLocation != null }
                 .map { order ->
                     PoI(order.shopType, order.pickupLocation as Coordinate,
                             order.pickupAddress ?: "", order.shopName ?: "")
                 }
-                .toTypedArray();
     }
 }

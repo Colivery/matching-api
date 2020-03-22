@@ -40,9 +40,13 @@ class EngineController {
 
         val orders = fireStoreService.getAllOrdersWithStateToBeDelivered()
                 .filter { order -> distanceService.calculateDistance(startLocation, order.dropOffLocation) <= radius }
+        orders.forEach { it.fixType() }
 
-        val allPoIs = poiSearchService.findPoIs(startLocation, radius).toMutableList()
-        allPoIs.addAll(poiService.extractPoIs(orders))
+        val orderPoIs = poiService.extractPoIs(orders)
+
+        val orderPoITypes = orders.map { order -> order.shopType }
+        val allPoIs = poiSearchService.findPoIs(startLocation, radius, orderPoITypes).toMutableList()
+        allPoIs.addAll(orderPoIs)
 
         val resultList = orders
                 .asSequence()
@@ -57,7 +61,7 @@ class EngineController {
 
     fun buildSearchResult(startLocation: Coordinate, order: Order, allPoIs: List<PoI>): SearchResult {
 
-        val firstActivity = Activity(startLocation, ActivityType.navigate, null, null, null)
+        val firstActivity = Activity(startLocation, ActivityType.start, null, null, null)
         val pickupLocation: Coordinate
         val shopName: String
         val shopAddress: String

@@ -2,7 +2,8 @@ package com.colivery.engine.service.poi
 
 import com.colivery.engine.model.Coordinate
 import com.colivery.engine.model.PoI
+import com.colivery.engine.model.PoIType
 
 interface PoiSearchService {
-    fun findPoIs(position: Coordinate, radiusKm: Float): Array<PoI>
+    fun findPoIs(position: Coordinate, radiusKm: Float, poiTypes: List<PoIType>): List<PoI>
 }

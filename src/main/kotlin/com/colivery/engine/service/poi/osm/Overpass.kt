@@ -34,39 +34,66 @@ data class Element(val tags: Tag, val lat: Double, val lon: Double)
 data class Tag(val shop: String?, val name: String?, val amenity: String?) {
     @JsonAlias("addr:street")
     val street: String = ""
+
     @JsonAlias("addr:housenumber")
     val number: String = ""
+
     @JsonAlias("addr:postcode")
     val postcode: String = ""
+
     @JsonAlias("addr:city")
     val city: String = ""
+
     @JsonAlias("addr:country")
     val country: String = ""
 }
 
 @Service
 class Overpass : PoiSearchService {
-    override fun findPoIs(position: Coordinate, radiusKm: Float): Array<PoI> {
+    override fun findPoIs(position: Coordinate, radiusKm: Float, poiTypes: List<PoIType>): List<PoI> {
         val quote: Response? = RestTemplate().postForObject("https://overpass-api.de/api/interpreter",
-                getRequestBody(position, radiusKm),
+                getRequestBody(position, radiusKm, poiTypes),
                 Response::class.java)
 
         if (quote != null) {
             return quote.elements
                     .map { element -> buildPoi(element) }
-                    .toTypedArray()
         }
-        return emptyArray()
+        return emptyList()
     }
 
     private fun buildPoi(element: Element): PoI {
-        return PoI(if (element.tags.shop != null) PoIType.Supermarket else PoIType.Pharmacy,
+        return PoI(translatePoIType(element),
                 Coordinate(element.lat, element.lon),
                 element.tags.street + " " + element.tags.number + " " + element.tags.postcode + " " + element.tags.city,
                 element.tags.name ?: "")
     }
 
-    private fun getRequestBody(position: Coordinate, radiusKm: Float): String {
+    private fun translatePoIType(element: Element): PoIType {
+        if (!element.tags.amenity.isNullOrEmpty()) {
+            if (element.tags.amenity == "cafe") {
+                return PoIType.cafe
+            }
+            if (element.tags.amenity == "pharmacy") {
+                return PoIType.pharmacy
+            }
+        }
+        if (element.tags.shop == "bakery") {
+            return PoIType.bakery
+        }
+        if (element.tags.shop == "butcher") {
+            return PoIType.butcher
+        }
+        if (element.tags.shop == "cafe") {
+            return PoIType.cafe
+        }
+        if (element.tags.shop == "beverages") {
+            return PoIType.beverages
+        }
+        return PoIType.supermarket
+    }
+
+    private fun getRequestBody(position: Coordinate, radiusKm: Float, poiTypes: List<PoIType>): String {
         var degreeDelta = radiusKm / 111.0F
         var latN = position.latitude - degreeDelta
         var latS = position.latitude + degreeDelta
@@ -76,10 +103,29 @@ class Overpass : PoiSearchService {
 
         return "[out:json][timeout:25]\n" +
                 "[bbox:" + latN + "," + lonL + "," + latS + "," + lonR + "];\n" +
-                "( nwr[amenity=pharmacy];\n" +
-                "  nwr[shop=supermarket];\n" +
-                //"  nwr[shop=convenience];\n" +
+                "(" +
+                buildOSMPoITypeRequestString(poiTypes) +
                 " );\n" +
                 "out center;"
+    }
+
+    private fun buildOSMPoITypeRequestString(poiTypes: List<PoIType>): String {
+        val result = StringBuilder()
+        poiTypes.forEach {
+            if (it == PoIType.Pharmacy || it == PoIType.pharmacy) {
+                result.append("  nwr[amenity=pharmacy];\n")
+            } else if (it == PoIType.Supermarket || it == PoIType.grocery || it == PoIType.supermarket) {
+                result.append("  nwr[shop=supermarket];\n")
+            } else if (it == PoIType.bakery) {
+                result.append("  nwr[shop=bakery];\n")
+            } else if (it == PoIType.butcher) {
+                result.append("  nwr[shop=butcher];\n")
+            } else if (it == PoIType.cafe) {
+                result.append("  nwr[amenity=cafe];\n")
+            } else if (it == PoIType.beverages) {
+                result.append("  nwr[shop=beverages];\n")
+            }
+        }
+        return result.toString()
     }
 }

@@ -4,7 +4,7 @@ data class Order(val id: String,
                  val userId: String,
                  val shopName: String?,
                  val pickupAddress: String?,
-                 val shopType: PoIType,
+                 var shopType: PoIType,
                  val pickupLocation: Coordinate?,
                  val dropOffLocation: Coordinate
 ) {
@@ -38,4 +38,12 @@ data class Order(val id: String,
     }
 
 
+    fun fixType() {
+        if (this.shopType == PoIType.Supermarket || this.shopType == PoIType.grocery) {
+            this.shopType = PoIType.supermarket
+        }
+        if (this.shopType == PoIType.Pharmacy) {
+            this.shopType = PoIType.pharmacy
+        }
+    }
 }
