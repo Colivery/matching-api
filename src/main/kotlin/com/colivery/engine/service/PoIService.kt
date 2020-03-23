@@ -18,7 +18,7 @@ class PoIService {
 
         val minBy = pois
                 .minBy { poi ->
-                    distanceService.calculateDistance(start, poi.coordinate) + distanceService.calculateDistance(poi.coordinate, dropOff)
+                    distanceService.haversine(start, poi.coordinate) + distanceService.haversine(poi.coordinate, dropOff)
                 }
         return minBy as PoI
     }

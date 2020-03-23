@@ -1,13 +1,6 @@
 package com.colivery.engine
 
-import com.colivery.engine.model.Activity
-import com.colivery.engine.model.ActivityType
-import com.colivery.engine.model.Coordinate
-import com.colivery.engine.model.Order
-import com.colivery.engine.model.PoI
-import com.colivery.engine.model.SearchRequest
-import com.colivery.engine.model.SearchResponse
-import com.colivery.engine.model.SearchResult
+import com.colivery.engine.model.*
 import com.colivery.engine.service.DistanceService
 import com.colivery.engine.service.FireStoreService
 import com.colivery.engine.service.PoIService
@@ -15,7 +8,6 @@ import com.colivery.engine.service.poi.PoiSearchService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -48,7 +40,7 @@ class EngineController {
         val radius = request.range
 
         val orders = fireStoreService.getAllOrdersWithStateToBeDelivered()
-                .filter { order -> distanceService.calculateDistance(startLocation, order.dropOffLocation) <= radius }
+                .filter { order -> distanceService.haversine(startLocation, order.dropOffLocation) <= radius }
         orders.forEach { it.fixType() }
 
         val orderPoIs = poiService.extractPoIs(orders)
@@ -89,10 +81,19 @@ class EngineController {
             pickup = Activity(pickupLocation, ActivityType.pickup, shopName, shopAddress, true)
         }
 
-        val distance = distanceService.calculateDistance(startLocation, pickupLocation)
+        val distance = distanceService.haversine(startLocation, pickupLocation) + distanceService.haversine(pickupLocation, order.dropOffLocation)
         val dropOff = Activity(order.dropOffLocation, ActivityType.drop_off, null, null, null)
         val activitySequence: List<Activity> = listOf(firstActivity, pickup, dropOff)
-        return SearchResult(order.id, distance, activitySequence)
+        return SearchResult(order.id, distance, activitySequence, buildMapsLink(activitySequence))
+    }
+
+    private fun buildMapsLink(activitySequence: List<Activity>): String {
+        val mapsLink = StringBuilder()
+        mapsLink.append("https://www.google.com/maps/dir")
+        for (activity in activitySequence) {
+            mapsLink.append("/" + activity.coordinate.latitude + "," + activity.coordinate.longitude)
+        }
+        return mapsLink.toString()
     }
 
 }
