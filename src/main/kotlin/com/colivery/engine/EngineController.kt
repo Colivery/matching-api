@@ -40,6 +40,12 @@ class EngineController {
         val radius = request.range
 
         val orders = fireStoreService.getAllOrdersWithStateToBeDelivered()
+                .filter { order ->
+                    if (order.pickupLocation == null)
+                        true
+                    else
+                        distanceService.haversine(startLocation, order.pickupLocation) <= radius
+                }
                 .filter { order -> distanceService.haversine(startLocation, order.dropOffLocation) <= radius }
         orders.forEach { it.fixType() }
 
