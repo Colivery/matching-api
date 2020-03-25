@@ -20,6 +20,13 @@ class OrderService {
     @Autowired
     lateinit var distanceService: DistanceService
 
+    fun fetchOrdersByIds(orderIds: Set<String>): List<Order> {
+        val orders = fireStoreService.getOrdersByIds(orderIds)
+                .mapNotNull { documentSnapshot -> filterValidOrderDocuments(documentSnapshot) }
+        orders.forEach { it.fixType() }
+        return orders
+    }
+
     fun fetchAllValidOrders(startLocation: Coordinate, radius: Float): List<Order> {
         val orders = fireStoreService.getAllOrderDocumentsWithStatusToBeDelivered()
                 .mapNotNull { documentSnapshot -> filterValidOrderDocuments(documentSnapshot) }

@@ -4,8 +4,7 @@ import com.colivery.engine.model.*
 import com.colivery.engine.service.DistanceService
 import com.colivery.engine.service.OrderService
 import com.colivery.engine.service.PoIService
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import com.colivery.engine.service.RouteService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -14,10 +13,8 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/search")
+@RequestMapping("/engine")
 class EngineController {
-
-    private val logger: Logger = LoggerFactory.getLogger(EngineController::class.java)
 
     @Autowired
     lateinit var poiService: PoIService
@@ -28,10 +25,22 @@ class EngineController {
     @Autowired
     lateinit var orderService: OrderService
 
-    @PostMapping("/query")
-    fun search(@RequestBody @Valid request: SearchRequest): SearchResponse? {
-        logger.info("POST /search/query $request")
+    @Autowired
+    lateinit var routeService: RouteService
 
+    @PostMapping("/route")
+    fun route(@RequestBody @Valid request: RouteRequest): RouteResponse {
+        val orders = orderService.fetchOrdersByIds(request.orderIds)
+        val allPoIs = poiService.findAllPoIs(request.coordinate, request.range, orders)
+        val activitySequence = routeService.buildRoute(request.coordinate, orders, allPoIs)
+
+        return RouteResponse(distanceService.calculateTotalDistance(activitySequence),
+                activitySequence,
+                buildMapsLink(activitySequence))
+    }
+
+    @PostMapping("/query")
+    fun query(@RequestBody @Valid request: QueryRequest): QueryResponse {
         val startLocation = request.coordinate
         val radius = request.range
 
@@ -47,12 +56,12 @@ class EngineController {
                 .sortedBy { result -> result.distanceKm }
                 .toList()
 
-        return SearchResponse(resultList, allPoIs)
+        return QueryResponse(resultList, allPoIs)
     }
 
-    fun buildSearchResult(startLocation: Coordinate, order: Order, allPoIs: Set<PoI>): SearchResult {
+    fun buildSearchResult(startLocation: Coordinate, order: Order, allPoIs: Set<PoI>): QueryResult {
 
-        val firstActivity = Activity(startLocation, ActivityType.start, null, null, null)
+        val firstActivity = Activity(null, startLocation, ActivityType.start, null, null, null)
         val pickupLocation: Coordinate
         val shopName: String
         val shopAddress: String
@@ -63,19 +72,18 @@ class EngineController {
             shopName = poi.name
             shopAddress = poi.address
             pickupLocation = poi.coordinate
-            pickup = Activity(pickupLocation, ActivityType.pickup, shopName, shopAddress, false)
+            pickup = Activity(order.id, pickupLocation, ActivityType.pickup, shopName, shopAddress, false)
         } else {
             shopName = order.shopName ?: ""
             shopAddress = order.pickupAddress ?: ""
             pickupLocation = order.pickupLocation
-            pickup = Activity(pickupLocation, ActivityType.pickup, shopName, shopAddress, true)
+            pickup = Activity(order.id, pickupLocation, ActivityType.pickup, shopName, shopAddress, true)
         }
 
-        val distance = distanceService.haversine(startLocation, pickupLocation) +
-                distanceService.haversine(pickupLocation, order.dropOffLocation)
-        val dropOff = Activity(order.dropOffLocation, ActivityType.drop_off, null, null, null)
-        val activitySequence: List<Activity> = listOf(firstActivity, pickup, dropOff)
-        return SearchResult(order.id,
+        val dropOff = Activity(order.id, order.dropOffLocation, ActivityType.drop_off, null, null, null)
+        val activitySequence = listOf(firstActivity, pickup, dropOff)
+        val distance = distanceService.calculateTotalDistance(activitySequence)
+        return QueryResult(order.id,
                 distance,
                 activitySequence,
                 buildMapsLink(activitySequence))

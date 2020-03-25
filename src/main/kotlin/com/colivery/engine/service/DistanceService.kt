@@ -1,5 +1,6 @@
 package com.colivery.engine.service
 
+import com.colivery.engine.model.Activity
 import com.colivery.engine.model.Coordinate
 import org.springframework.stereotype.Service
 
@@ -16,5 +17,19 @@ class DistanceService {
         val a = Math.pow(Math.sin(dLat / 2), 2.toDouble()) + Math.pow(Math.sin(dLon / 2), 2.toDouble()) * Math.cos(originLat) * Math.cos(destinationLat);
         val c = 2 * Math.asin(Math.sqrt(a));
         return earthRadiusKm * c;
+    }
+
+    fun calculateTotalDistance(activitySequence: List<Activity>): Double {
+        var totalDistance = 0.0
+        var lastCoordinate: Coordinate? = null
+        for (activity in activitySequence) {
+            if (lastCoordinate == null) {
+                lastCoordinate = activity.coordinate
+                continue
+            }
+            totalDistance += haversine(lastCoordinate, activity.coordinate)
+            lastCoordinate = activity.coordinate
+        }
+        return totalDistance
     }
 }
