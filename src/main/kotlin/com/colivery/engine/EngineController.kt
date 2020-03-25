@@ -2,7 +2,7 @@ package com.colivery.engine
 
 import com.colivery.engine.model.*
 import com.colivery.engine.service.DistanceService
-import com.colivery.engine.service.FireStoreService
+import com.colivery.engine.service.OrderService
 import com.colivery.engine.service.PoIService
 import com.colivery.engine.service.poi.PoiSearchService
 import org.slf4j.Logger
@@ -30,7 +30,7 @@ class EngineController {
     lateinit var distanceService: DistanceService
 
     @Autowired
-    lateinit var fireStoreService: FireStoreService
+    lateinit var orderService: OrderService
 
     @PostMapping("/query")
     fun search(@RequestBody @Valid request: SearchRequest): SearchResponse? {
@@ -39,15 +39,7 @@ class EngineController {
         val startLocation = request.coordinate
         val radius = request.range
 
-        val orders = fireStoreService.getAllOrdersWithStateToBeDelivered()
-                .filter { order ->
-                    if (order.pickupLocation == null)
-                        true
-                    else
-                        distanceService.haversine(startLocation, order.pickupLocation) <= radius
-                }
-                .filter { order -> distanceService.haversine(startLocation, order.dropOffLocation) <= radius }
-        orders.forEach { it.fixType() }
+        val orders = orderService.fetchAllValidOrders(startLocation, radius)
 
         val orderPoIs = poiService.extractPoIs(orders)
 
