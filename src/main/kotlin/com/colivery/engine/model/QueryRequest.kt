@@ -10,7 +10,7 @@ data class QueryRequest(
         @Valid
         val coordinate: Coordinate,
 
-        @Min(0)
+        @Min(1)
         @Max(50)
         val range: Float = 5.0F
 )
