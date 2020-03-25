@@ -1,6 +1,6 @@
 package com.colivery.engine.model
 
-data class SearchResponse(val orders: List<SearchResult>, val pois: List<PoI>)
+data class SearchResponse(val orders: List<SearchResult>, val pois: Set<PoI>)
 
 data class SearchResult(val orderId: String,
                         val distanceKm: Double,

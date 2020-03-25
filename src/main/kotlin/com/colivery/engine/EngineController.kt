@@ -4,7 +4,6 @@ import com.colivery.engine.model.*
 import com.colivery.engine.service.DistanceService
 import com.colivery.engine.service.OrderService
 import com.colivery.engine.service.PoIService
-import com.colivery.engine.service.poi.PoiSearchService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,9 +23,6 @@ class EngineController {
     lateinit var poiService: PoIService
 
     @Autowired
-    lateinit var poiSearchService: PoiSearchService
-
-    @Autowired
     lateinit var distanceService: DistanceService
 
     @Autowired
@@ -41,11 +37,7 @@ class EngineController {
 
         val orders = orderService.fetchAllValidOrders(startLocation, radius)
 
-        val orderPoIs = poiService.extractPoIs(orders)
-
-        val orderPoITypes = orders.map { order -> order.shopType }.toSet()
-        val allPoIs = poiSearchService.findPoIs(startLocation, radius, orderPoITypes).toMutableList()
-        allPoIs.addAll(orderPoIs)
+        val allPoIs = poiService.findAllPoIs(startLocation, radius, orders)
 
         val resultList = orders
                 .asSequence()
@@ -58,7 +50,7 @@ class EngineController {
         return SearchResponse(resultList, allPoIs)
     }
 
-    fun buildSearchResult(startLocation: Coordinate, order: Order, allPoIs: List<PoI>): SearchResult {
+    fun buildSearchResult(startLocation: Coordinate, order: Order, allPoIs: Set<PoI>): SearchResult {
 
         val firstActivity = Activity(startLocation, ActivityType.start, null, null, null)
         val pickupLocation: Coordinate
@@ -79,10 +71,14 @@ class EngineController {
             pickup = Activity(pickupLocation, ActivityType.pickup, shopName, shopAddress, true)
         }
 
-        val distance = distanceService.haversine(startLocation, pickupLocation) + distanceService.haversine(pickupLocation, order.dropOffLocation)
+        val distance = distanceService.haversine(startLocation, pickupLocation) +
+                distanceService.haversine(pickupLocation, order.dropOffLocation)
         val dropOff = Activity(order.dropOffLocation, ActivityType.drop_off, null, null, null)
         val activitySequence: List<Activity> = listOf(firstActivity, pickup, dropOff)
-        return SearchResult(order.id, distance, activitySequence, buildMapsLink(activitySequence))
+        return SearchResult(order.id,
+                distance,
+                activitySequence,
+                buildMapsLink(activitySequence))
     }
 
     private fun buildMapsLink(activitySequence: List<Activity>): String {
