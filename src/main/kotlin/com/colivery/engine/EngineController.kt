@@ -92,8 +92,14 @@ class EngineController {
     private fun buildMapsLink(activitySequence: List<Activity>): String {
         val mapsLink = StringBuilder()
         mapsLink.append("https://www.google.com/maps/dir")
+        var lastCoordinate: Coordinate? = null
         for (activity in activitySequence) {
-            mapsLink.append("/" + activity.coordinate.latitude + "," + activity.coordinate.longitude)
+            if (lastCoordinate == null) {
+                mapsLink.append("/" + activity.coordinate.latitude + "," + activity.coordinate.longitude)
+                lastCoordinate = activity.coordinate
+            } else if (lastCoordinate != activity.coordinate) {
+                mapsLink.append("/" + activity.coordinate.latitude + "," + activity.coordinate.longitude)
+            }
         }
         return mapsLink.toString()
     }

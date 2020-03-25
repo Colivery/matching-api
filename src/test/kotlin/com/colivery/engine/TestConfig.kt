@@ -1,5 +1,6 @@
 package com.colivery.engine
 
+import com.colivery.engine.service.DistanceService
 import com.google.cloud.firestore.Firestore
 import com.google.firebase.FirebaseApp
 import io.mockk.every
@@ -20,4 +21,8 @@ class TestConfig {
     fun createFirestore(): Firestore = mockk() {
         every { collection(any()) } returns mockk()
     }
+
+    @Bean
+    @Primary
+    fun createDistanceService(): DistanceService = DistanceService()
 }

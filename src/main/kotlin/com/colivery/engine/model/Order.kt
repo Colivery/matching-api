@@ -16,4 +16,28 @@ data class Order(val id: String,
             this.shopType = PoIType.pharmacy
         }
     }
+
+    fun buildPickup() = Activity(id,
+            pickupLocation!!,
+            ActivityType.pickup,
+            shopName,
+            pickupAddress,
+            true
+    )
+
+    fun buildDropOff() = Activity(id,
+            dropOffLocation,
+            ActivityType.drop_off,
+            null,
+            null,
+            null
+    )
+
+    fun buildPickup(poi: PoI) = Activity(id,
+            poi.coordinate,
+            ActivityType.pickup,
+            poi.name,
+            poi.address,
+            false
+    )
 }
