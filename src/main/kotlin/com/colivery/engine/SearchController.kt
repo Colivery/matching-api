@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/engine")
-class EngineController {
+@RequestMapping("/search")
+class SearchController {
 
     @Autowired
     lateinit var poiService: PoIService
@@ -39,8 +39,8 @@ class EngineController {
                 buildMapsLink(activitySequence))
     }
 
-    @PostMapping("/query")
-    fun query(@RequestBody @Valid request: QueryRequest): QueryResponse {
+    @PostMapping("/order")
+    fun query(@RequestBody @Valid request: OrderRequest): OrderResponse {
         val startLocation = request.coordinate
         val radius = request.range
 
@@ -56,10 +56,10 @@ class EngineController {
                 .sortedBy { result -> result.distanceKm }
                 .toList()
 
-        return QueryResponse(resultList, allPoIs)
+        return OrderResponse(resultList, allPoIs)
     }
 
-    fun buildSearchResult(startLocation: Coordinate, order: Order, allPoIs: Set<PoI>): QueryResult {
+    fun buildSearchResult(startLocation: Coordinate, order: Order, allPoIs: Set<PoI>): OrderResult {
 
         val firstActivity = Activity(null, startLocation, ActivityType.start, null, null, null)
         val pickupLocation: Coordinate
@@ -83,7 +83,7 @@ class EngineController {
         val dropOff = Activity(order.id, order.dropOffLocation, ActivityType.drop_off, null, null, null)
         val activitySequence = listOf(firstActivity, pickup, dropOff)
         val distance = distanceService.calculateTotalDistance(activitySequence)
-        return QueryResult(order.id,
+        return OrderResult(order.id,
                 distance,
                 activitySequence,
                 buildMapsLink(activitySequence))

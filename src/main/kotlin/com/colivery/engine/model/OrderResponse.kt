@@ -1,8 +1,8 @@
 package com.colivery.engine.model
 
-data class QueryResponse(val orders: List<QueryResult>, val pois: Set<PoI>)
+data class OrderResponse(val orders: List<OrderResult>, val pois: Set<PoI>)
 
-data class QueryResult(val orderId: String,
+data class OrderResult(val orderId: String,
                        val distanceKm: Double,
                        val activitySequence: List<Activity>,
                        val mapsLink: String)

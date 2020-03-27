@@ -6,7 +6,7 @@ import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 
 @Validated
-data class QueryRequest(
+data class OrderRequest(
         @Valid
         val coordinate: Coordinate,
 
