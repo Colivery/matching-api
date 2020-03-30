@@ -24,10 +24,8 @@ jobs:
       with:
         java-version: 11
 
-    - name: Gradle Build
-      uses: eskatos/gradle-command-action@v1
-      with:
-        arguments: clean assemble
+    - name: Maven Build
+      run: mvn clean install -U
 
     - name: Prepare Cloud Build
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
