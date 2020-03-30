@@ -74,11 +74,11 @@ class GeoHashService {
             val idx = base32.indexOf(element);
             if (idx == -1) throw Exception("Invalid geohash");
 
-            for (n in 4..0) {
+            for (n in 4 downTo 0) {
                 val bitN = idx shr n and 1;
                 if (evenBit) {
                     // longitude
-                    val lonMid = (lonMin + lonMax) / 2;
+                    val lonMid = (lonMin + lonMax) / 2.0;
                     if (bitN == 1) {
                         lonMin = lonMid;
                     } else {
@@ -86,7 +86,7 @@ class GeoHashService {
                     }
                 } else {
                     // latitude
-                    val latMid = (latMin + latMax) / 2;
+                    val latMid = (latMin + latMax) / 2.0;
                     if (bitN == 1) {
                         latMin = latMid;
                     } else {
