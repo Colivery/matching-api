@@ -28,8 +28,13 @@ class SearchController {
     @Autowired
     lateinit var routeService: RouteService
 
-    @PostMapping("/route")
-    fun route(@RequestBody @Valid request: RouteRequest): RouteResponse {
+    @PostMapping("query")
+    fun query(@RequestBody @Valid request: QueryRequest): QueryResponse {
+        return QueryResponse(orderService.fetchAllValidOrders(request.coordinate, request.range))
+    }
+
+    @PostMapping("/route/orders")
+    fun routeOrders(@RequestBody @Valid request: RouteRequest): RouteResponse {
         val orders = orderService.fetchOrdersByIds(request.orderIds)
         val allPoIs = poiService.findAllPoIs(request.coordinate, request.range, orders)
         val activitySequence = routeService.buildRoute(request.coordinate, orders, allPoIs)
@@ -40,7 +45,7 @@ class SearchController {
     }
 
     @PostMapping("/order")
-    fun query(@RequestBody @Valid request: OrderRequest): OrderResponse {
+    fun orders(@RequestBody @Valid request: OrderRequest): OrderResponse {
         val startLocation = request.coordinate
         val radius = request.range
 
@@ -103,5 +108,4 @@ class SearchController {
         }
         return mapsLink.toString()
     }
-
 }

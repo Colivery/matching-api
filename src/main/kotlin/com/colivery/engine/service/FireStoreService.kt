@@ -7,11 +7,12 @@ import org.springframework.stereotype.Service
 
 @Service
 class FireStoreService(private val firestore: Firestore) {
+    enum class Status { to_be_delivered }
 
-    fun getAllOrderDocumentsWithStatusToBeDelivered(): MutableList<QueryDocumentSnapshot> {
-
+    fun getOrderDocuments(status: Status, geoHashes: Set<String>): MutableList<QueryDocumentSnapshot> {
         return firestore.collection("order")
-                .whereEqualTo("status", "to_be_delivered")
+                .whereEqualTo("status", status.name)
+                .whereIn("dropoff_location_geohash", geoHashes.toMutableList())
                 .get().get().documents
     }
 

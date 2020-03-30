@@ -18,6 +18,9 @@ class OrderService {
     lateinit var fireStoreService: FireStoreService
 
     @Autowired
+    lateinit var geoHashService: GeoHashService
+
+    @Autowired
     lateinit var distanceService: DistanceService
 
     fun fetchOrdersByIds(orderIds: Set<String>): List<Order> {
@@ -28,7 +31,9 @@ class OrderService {
     }
 
     fun fetchAllValidOrders(startLocation: Coordinate, radius: Float): List<Order> {
-        val orders = fireStoreService.getAllOrderDocumentsWithStatusToBeDelivered()
+        val geoHashes = buildGeoHashes(startLocation, radius)
+
+        val orders = fireStoreService.getOrderDocuments(FireStoreService.Status.to_be_delivered, geoHashes)
                 .mapNotNull { documentSnapshot -> filterValidOrderDocuments(documentSnapshot) }
                 .filter { order ->
                     if (order.pickupLocation == null)
@@ -48,6 +53,80 @@ class OrderService {
             logger.info("Problem parsing Order (invalid document?) / OrderID " + documentSnapshot.id)
             e.printStackTrace()
             null
+        }
+    }
+
+    private fun buildGeoHashes(startLocation: Coordinate, radius: Float): MutableSet<String> {
+        val initialGeoHash = geoHashService.encode(startLocation.latitude, startLocation.longitude)
+        val bounds = geoHashService.bounds(initialGeoHash)
+        val neighbours = geoHashService.neighbours(initialGeoHash)
+
+        val geoHashes = mutableSetOf(initialGeoHash)
+        testE(startLocation, radius, bounds, geoHashes, neighbours.e)
+        testSE(startLocation, radius, bounds, geoHashes, neighbours.se)
+        testS(startLocation, radius, bounds, geoHashes, neighbours.s)
+        testSW(startLocation, radius, bounds, geoHashes, neighbours.sw)
+        testW(startLocation, radius, bounds, geoHashes, neighbours.w)
+        testNW(startLocation, radius, bounds, geoHashes, neighbours.nw)
+        testN(startLocation, radius, bounds, geoHashes, neighbours.n)
+        testNE(startLocation, radius, bounds, geoHashes, neighbours.ne)
+
+        return geoHashes
+    }
+
+    private fun testE(startLocation: Coordinate, radius: Float, bounds: Bounds, geoHashes: MutableSet<String>, geoHash: String) {
+        if (distanceService.haversine(startLocation, Coordinate(startLocation.latitude, bounds.ne.longitude)) < radius) {
+            geoHashes.add(geoHash)
+            testE(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).e)
+        }
+    }
+
+    private fun testSE(startLocation: Coordinate, radius: Float, bounds: Bounds, geoHashes: MutableSet<String>, geoHash: String) {
+        if (distanceService.haversine(startLocation, Coordinate(bounds.sw.latitude, bounds.ne.longitude)) < radius) {
+            geoHashes.add(geoHash)
+            testSE(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).se)
+        }
+    }
+
+    private fun testS(startLocation: Coordinate, radius: Float, bounds: Bounds, geoHashes: MutableSet<String>, geoHash: String) {
+        if (distanceService.haversine(startLocation, Coordinate(bounds.sw.latitude, startLocation.longitude)) < radius) {
+            geoHashes.add(geoHash)
+            testS(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).s)
+        }
+    }
+
+    private fun testSW(startLocation: Coordinate, radius: Float, bounds: Bounds, geoHashes: MutableSet<String>, geoHash: String) {
+        if (distanceService.haversine(startLocation, Coordinate(bounds.sw.latitude, bounds.sw.longitude)) < radius) {
+            geoHashes.add(geoHash)
+            testSW(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).sw)
+        }
+    }
+
+    private fun testW(startLocation: Coordinate, radius: Float, bounds: Bounds, geoHashes: MutableSet<String>, geoHash: String) {
+        if (distanceService.haversine(startLocation, Coordinate(startLocation.latitude, bounds.sw.longitude)) < radius) {
+            geoHashes.add(geoHash)
+            testW(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).w)
+        }
+    }
+
+    private fun testNW(startLocation: Coordinate, radius: Float, bounds: Bounds, geoHashes: MutableSet<String>, geoHash: String) {
+        if (distanceService.haversine(startLocation, Coordinate(bounds.ne.latitude, bounds.sw.longitude)) < radius) {
+            geoHashes.add(geoHash)
+            testNW(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).nw)
+        }
+    }
+
+    private fun testN(startLocation: Coordinate, radius: Float, bounds: Bounds, geoHashes: MutableSet<String>, geoHash: String) {
+        if (distanceService.haversine(startLocation, Coordinate(bounds.ne.latitude, startLocation.longitude)) < radius) {
+            geoHashes.add(geoHash)
+            testN(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).n)
+        }
+    }
+
+    private fun testNE(startLocation: Coordinate, radius: Float, bounds: Bounds, geoHashes: MutableSet<String>, geoHash: String) {
+        if (distanceService.haversine(startLocation, Coordinate(bounds.ne.latitude, bounds.ne.longitude)) < radius) {
+            geoHashes.add(geoHash)
+            testNE(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).ne)
         }
     }
 }
