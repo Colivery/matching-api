@@ -56,7 +56,7 @@ class OrderService {
         }
     }
 
-    private fun buildGeoHashes(startLocation: Coordinate, radius: Float): MutableSet<String> {
+    fun buildGeoHashes(startLocation: Coordinate, radius: Float): MutableSet<String> {
         val initialGeoHash = geoHashService.encode(startLocation.latitude, startLocation.longitude)
         val bounds = geoHashService.bounds(initialGeoHash)
         val neighbours = geoHashService.neighbours(initialGeoHash)
@@ -85,6 +85,8 @@ class OrderService {
         if (distanceService.haversine(startLocation, Coordinate(bounds.sw.latitude, bounds.ne.longitude)) < radius) {
             geoHashes.add(geoHash)
             testSE(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).se)
+            testS(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).s)
+            testE(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).e)
         }
     }
 
@@ -99,6 +101,8 @@ class OrderService {
         if (distanceService.haversine(startLocation, Coordinate(bounds.sw.latitude, bounds.sw.longitude)) < radius) {
             geoHashes.add(geoHash)
             testSW(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).sw)
+            testS(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).s)
+            testW(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).w)
         }
     }
 
@@ -113,6 +117,8 @@ class OrderService {
         if (distanceService.haversine(startLocation, Coordinate(bounds.ne.latitude, bounds.sw.longitude)) < radius) {
             geoHashes.add(geoHash)
             testNW(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).nw)
+            testN(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).n)
+            testW(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).w)
         }
     }
 
@@ -127,6 +133,8 @@ class OrderService {
         if (distanceService.haversine(startLocation, Coordinate(bounds.ne.latitude, bounds.ne.longitude)) < radius) {
             geoHashes.add(geoHash)
             testNE(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).ne)
+            testN(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).n)
+            testE(startLocation, radius, geoHashService.bounds(geoHash), geoHashes, geoHashService.neighbours(geoHash).e)
         }
     }
 }
