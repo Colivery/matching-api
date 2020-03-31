@@ -4,6 +4,7 @@ import com.colivery.engine.model.Coordinate
 import com.colivery.engine.model.Order
 import com.colivery.engine.toOrder
 import com.google.cloud.firestore.QueryDocumentSnapshot
+import com.xlvecle.geohashPoly
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,7 +34,7 @@ class OrderService {
     fun fetchAllValidOrders(startLocation: Coordinate, radius: Float): List<Order> {
         val geoHashes = buildGeoHashes(startLocation, radius)
 
-        val orders = fireStoreService.getOrderDocuments(FireStoreService.Status.to_be_delivered, geoHashes)
+        val orders = fireStoreService.getOrderDocumentsByStatusAndGeoHash(FireStoreService.Status.to_be_delivered, geoHashes)
                 .mapNotNull { documentSnapshot -> filterValidOrderDocuments(documentSnapshot) }
                 .filter { order ->
                     if (order.pickupLocation == null)
