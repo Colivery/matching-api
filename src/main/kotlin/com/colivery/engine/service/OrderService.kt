@@ -4,7 +4,6 @@ import com.colivery.engine.model.Coordinate
 import com.colivery.engine.model.Order
 import com.colivery.engine.toOrder
 import com.google.cloud.firestore.QueryDocumentSnapshot
-import com.xlvecle.geohashPoly
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
