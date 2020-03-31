@@ -34,7 +34,7 @@ class OrderService {
     fun fetchAllValidOrders(startLocation: Coordinate, radius: Float): List<Order> {
         val geoHashes = buildGeoHashes(startLocation, radius)
 
-        val orders = fireStoreService.getOrderDocumentsByStatusAndGeoHash(FireStoreService.Status.to_be_delivered, geoHashes)
+        val orders = fireStoreService.getOrderDocumentsByStatusAndGeoHashRange(FireStoreService.Status.to_be_delivered, geoHashes)
                 .mapNotNull { documentSnapshot -> filterValidOrderDocuments(documentSnapshot) }
                 .filter { order ->
                     if (order.pickupLocation == null)
