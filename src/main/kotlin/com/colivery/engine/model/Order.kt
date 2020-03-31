@@ -1,12 +1,18 @@
 package com.colivery.engine.model
 
+data class OrderItem(val id: String, val description: String, val status: String)
+
 data class Order(val id: String,
                  val userId: String,
                  val shopName: String?,
                  val pickupAddress: String?,
+                 val hint: String?,
                  var shopType: PoIType,
                  val pickupLocation: Coordinate?,
-                 val dropOffLocation: Coordinate
+                 val dropOffLocation: Coordinate,
+                 val status: String,
+                 val driverUserId: String?,
+                 val items: List<OrderItem>?
 ) {
     fun fixType() {
         if (this.shopType == PoIType.Supermarket || this.shopType == PoIType.grocery) {
