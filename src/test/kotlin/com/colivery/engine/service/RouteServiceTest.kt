@@ -21,6 +21,8 @@ internal class RouteServiceTest {
     fun testBuildRoute1x() {
         val startLocation = Coordinate(49.0, 18.0)
         val order1 = Order("1",
+                null,
+                null,
                 "1",
                 "Shop",
                 "Address",
@@ -30,7 +32,8 @@ internal class RouteServiceTest {
                 Coordinate(49.2, 18.2),
                 "to_be_delivered",
                 null,
-                emptyList()
+                emptyList(),
+                10
         )
 
         val result = routeService.buildRoute(startLocation,
@@ -50,6 +53,8 @@ internal class RouteServiceTest {
     fun testBuildRoute2x() {
         val startLocation = Coordinate(49.0, 18.0)
         val order1 = Order("1",
+                null,
+                null,
                 "1",
                 "Shop",
                 "Address",
@@ -59,9 +64,13 @@ internal class RouteServiceTest {
                 Coordinate(49.4, 18.4),
                 "to_be_delivered",
                 null,
-                emptyList())
+                emptyList(),
+                10
+        )
 
         val order2 = Order("2",
+                null,
+                null,
                 "1",
                 "Shop",
                 "Address",
@@ -71,7 +80,9 @@ internal class RouteServiceTest {
                 Coordinate(49.3, 18.3),
                 "to_be_delivered",
                 null,
-                emptyList())
+                emptyList(),
+                10
+        )
 
         val result = routeService.buildRoute(startLocation,
                 listOf(order1, order2),
