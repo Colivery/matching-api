@@ -1,8 +1,12 @@
 package com.colivery.engine.model
 
+import java.time.Instant
+
 data class OrderItem(val id: String, val description: String, val status: String)
 
 data class Order(val id: String,
+                 val created: Instant?,
+                 val updated: Instant?,
                  val userId: String,
                  val shopName: String?,
                  val pickupAddress: String?,
@@ -12,7 +16,8 @@ data class Order(val id: String,
                  val dropOffLocation: Coordinate,
                  val status: String,
                  val driverUserId: String?,
-                 val items: List<OrderItem>?
+                 val items: List<OrderItem>?,
+                 val maxPrice: Long?
 ) {
     fun fixType() {
         if (this.shopType == PoIType.Supermarket || this.shopType == PoIType.grocery) {
