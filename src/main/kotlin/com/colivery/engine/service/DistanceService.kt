@@ -2,6 +2,7 @@ package com.colivery.engine.service
 
 import com.colivery.engine.model.Activity
 import com.colivery.engine.model.Coordinate
+import com.colivery.engine.model.Order
 import org.springframework.stereotype.Service
 
 @Service
@@ -31,5 +32,17 @@ class DistanceService {
             lastCoordinate = activity.coordinate
         }
         return totalDistance
+    }
+
+    fun calculateRange(orders: List<Order>, startLocation: Coordinate, minRange: Double = 5.0): Float {
+        val ne = Coordinate(orders.map { order -> order.dropOffLocation.latitude }.min()!!,
+                orders.map { order -> order.dropOffLocation.longitude }.min()!!)
+
+        val sw = Coordinate(orders.map { order -> order.dropOffLocation.latitude }.max()!!,
+                orders.map { order -> order.dropOffLocation.longitude }.max()!!)
+
+        return maxOf(haversine(startLocation, ne),
+                haversine(startLocation, sw),
+                minRange).toFloat()
     }
 }
