@@ -24,9 +24,14 @@ internal class RouteServiceTest {
                 "1",
                 "Shop",
                 "Address",
+                "hint",
                 PoIType.supermarket,
                 Coordinate(49.1, 18.1),
-                Coordinate(49.2, 18.2))
+                Coordinate(49.2, 18.2),
+                "to_be_delivered",
+                null,
+                emptyList()
+        )
 
         val result = routeService.buildRoute(startLocation,
                 listOf(order1),
@@ -48,17 +53,25 @@ internal class RouteServiceTest {
                 "1",
                 "Shop",
                 "Address",
+                "hint",
                 PoIType.supermarket,
                 Coordinate(49.1, 18.1),
-                Coordinate(49.4, 18.4))
+                Coordinate(49.4, 18.4),
+                "to_be_delivered",
+                null,
+                emptyList())
 
         val order2 = Order("2",
                 "1",
                 "Shop",
                 "Address",
+                "hint",
                 PoIType.supermarket,
                 Coordinate(49.2, 18.2),
-                Coordinate(49.3, 18.3))
+                Coordinate(49.3, 18.3),
+                "to_be_delivered",
+                null,
+                emptyList())
 
         val result = routeService.buildRoute(startLocation,
                 listOf(order1, order2),

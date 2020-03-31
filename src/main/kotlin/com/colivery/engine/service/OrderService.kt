@@ -3,6 +3,7 @@ package com.colivery.engine.service
 import com.colivery.engine.model.Coordinate
 import com.colivery.engine.model.Order
 import com.colivery.engine.toOrder
+import com.colivery.engine.toOrderItem
 import com.google.cloud.firestore.QueryDocumentSnapshot
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -48,7 +49,10 @@ class OrderService {
 
     private fun filterValidOrderDocuments(documentSnapshot: QueryDocumentSnapshot): Order? {
         return try {
-            documentSnapshot.toOrder()
+            documentSnapshot.toOrder(
+                    fireStoreService.getOrderItems(documentSnapshot.id)
+                            .map { documentSnapshot -> documentSnapshot.toOrderItem() }
+            )
         } catch (e: Throwable) {
             logger.info("Problem parsing Order (invalid document?) / OrderID " + documentSnapshot.id)
             e.printStackTrace()

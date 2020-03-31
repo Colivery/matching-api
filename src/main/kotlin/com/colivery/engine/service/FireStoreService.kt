@@ -5,8 +5,13 @@ import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.QueryDocumentSnapshot
 import org.springframework.stereotype.Service
 
+
+const val ORDER_ITEM_COLLECTION_NAME = "items"
+const val ORDER_COLLECTION_NAME = "order"
+
 @Service
 class FireStoreService(private val firestore: Firestore) {
+
     enum class Status { to_be_delivered }
 
     val orderCollection = firestore.collection("order")
@@ -44,8 +49,13 @@ class FireStoreService(private val firestore: Firestore) {
     }
 
     fun getOrdersByIds(orderIds: Set<String>): MutableList<QueryDocumentSnapshot> {
-        return firestore.collection("order")
+        return firestore.collection(ORDER_COLLECTION_NAME)
                 .whereIn(FieldPath.documentId(), orderIds.toList())
+                .get().get().documents
+    }
+
+    fun getOrderItems(orderId: String): MutableList<QueryDocumentSnapshot> {
+        return firestore.collection(ORDER_COLLECTION_NAME).document(orderId).collection(ORDER_ITEM_COLLECTION_NAME)
                 .get().get().documents
     }
 }
