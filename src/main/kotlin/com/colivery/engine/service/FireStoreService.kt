@@ -4,6 +4,7 @@ import com.google.cloud.firestore.FieldPath
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.QueryDocumentSnapshot
 import org.springframework.stereotype.Service
+import kotlin.math.max
 
 
 const val ORDER_ITEM_COLLECTION_NAME = "items"
@@ -26,16 +27,6 @@ class FireStoreService(private val firestore: Firestore) {
                     .get().get().documents)
 
         return result
-    }
-
-    fun getOrderDocumentsByStatusAndGeoHashRange(status: Status, geoHashes: Set<String>):
-            MutableList<QueryDocumentSnapshot> {
-
-        return getOrderDocumentsByStatusAndGeoHashRange(
-                status = FireStoreService.Status.to_be_delivered,
-                minGeoHash = geoHashes.min().orEmpty(),
-                maxGeoHash = geoHashes.max().orEmpty()
-        )
     }
 
     fun getOrderDocumentsByStatusAndGeoHashRange(status: Status, minGeoHash: String, maxGeoHash: String):
