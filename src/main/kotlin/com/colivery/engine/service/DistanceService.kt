@@ -1,24 +1,14 @@
 package com.colivery.engine.service
 
 import com.colivery.engine.model.Activity
-import com.colivery.engine.model.Coordinate
-import com.colivery.engine.model.Order
+import com.colivery.geo.Coordinate
+import com.colivery.geo.Distance
 import org.springframework.stereotype.Service
+
+private const val earthRadiusKm: Double = 6372.8
 
 @Service
 class DistanceService {
-    val earthRadiusKm: Double = 6372.8
-
-    fun haversine(position: Coordinate, position2: Coordinate): Double {
-        val dLat = Math.toRadians(position2.latitude - position.latitude);
-        val dLon = Math.toRadians(position2.longitude - position.longitude);
-        val originLat = Math.toRadians(position.latitude);
-        val destinationLat = Math.toRadians(position2.latitude);
-
-        val a = Math.pow(Math.sin(dLat / 2), 2.toDouble()) + Math.pow(Math.sin(dLon / 2), 2.toDouble()) * Math.cos(originLat) * Math.cos(destinationLat);
-        val c = 2 * Math.asin(Math.sqrt(a));
-        return earthRadiusKm * c;
-    }
 
     fun calculateTotalDistance(activitySequence: List<Activity>): Double {
         var totalDistance = 0.0
@@ -28,7 +18,7 @@ class DistanceService {
                 lastCoordinate = activity.coordinate
                 continue
             }
-            totalDistance += haversine(lastCoordinate, activity.coordinate)
+            totalDistance += Distance.haversine(lastCoordinate, activity.coordinate)
             lastCoordinate = activity.coordinate
         }
         return totalDistance

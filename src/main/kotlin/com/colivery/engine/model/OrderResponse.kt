@@ -1,5 +1,7 @@
 package com.colivery.engine.model
 
+import com.colivery.geo.Coordinate
+
 data class OrderResponse(val orders: List<OrderResult>, val pois: Set<PoI>)
 
 data class OrderResult(val orderId: String,
