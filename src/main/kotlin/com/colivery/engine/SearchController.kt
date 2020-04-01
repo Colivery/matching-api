@@ -74,7 +74,7 @@ class SearchController {
         val pickup: Activity
 
         if (order.pickupLocation == null) {
-            val poi = poiService.findBestPoI(startLocation, order.dropOffLocation, order.shopType, allPoIs)
+            val poi = poiService.findBestPoI(startLocation, order.dropoffLocation, order.shopType, allPoIs)
             shopName = poi.name
             shopAddress = poi.address
             pickupLocation = poi.coordinate
@@ -86,7 +86,7 @@ class SearchController {
             pickup = Activity(order.id, pickupLocation, ActivityType.pickup, shopName, shopAddress, true)
         }
 
-        val dropOff = Activity(order.id, order.dropOffLocation, ActivityType.drop_off, null, null, null)
+        val dropOff = Activity(order.id, order.dropoffLocation, ActivityType.drop_off, null, null, null)
         val activitySequence = listOf(firstActivity, pickup, dropOff)
         val distance = distanceService.calculateTotalDistance(activitySequence)
         return OrderResult(order.id,

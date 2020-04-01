@@ -40,7 +40,7 @@ class OrderService {
                     else
                         Distance.haversine(startLocation, order.pickupLocation) <= radius
                 }
-                .filter { order -> Distance.haversine(startLocation, order.dropOffLocation) <= radius }
+                .filter { order -> Distance.haversine(startLocation, order.dropoffLocation) <= radius }
         orders.forEach { it.fixType() }
         return orders
     }

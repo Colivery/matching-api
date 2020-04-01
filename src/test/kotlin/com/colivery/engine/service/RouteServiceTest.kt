@@ -110,6 +110,6 @@ internal class RouteServiceTest {
     private fun assertDropoff(order: Order, activity: Activity) {
         Assertions.assertEquals(ActivityType.drop_off, activity.type)
         Assertions.assertEquals(order.id, activity.orderId)
-        Assertions.assertEquals(order.dropOffLocation, activity.coordinate)
+        Assertions.assertEquals(order.dropoffLocation, activity.coordinate)
     }
 }
