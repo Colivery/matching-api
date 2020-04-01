@@ -23,10 +23,13 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: 11
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+        settings-path: ${{ github.workspace }} # location for the settings.xml file
 
     - name: Maven Build
-      run: mvn clean install -U
+      run: mvn -B clean install -U --file pom.xml -s $GITHUB_WORKSPACE/settings.xml
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
 
     - name: Prepare Cloud Build
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
