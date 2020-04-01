@@ -3,7 +3,10 @@ package com.colivery.engine.model
 import com.colivery.geo.Coordinate
 import org.springframework.validation.annotation.Validated
 import javax.validation.Valid
-import javax.validation.constraints.*
+import javax.validation.constraints.Max
+import javax.validation.constraints.Min
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
 
 @Validated
 data class RouteRequest(
@@ -12,7 +15,7 @@ data class RouteRequest(
 
         @Min(1)
         @Max(50)
-        val range: Float? = 5.0F,
+        val range: Double?,
 
         @NotNull
         @Size(min = 1, max = 10)
