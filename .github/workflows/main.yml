@@ -25,9 +25,9 @@ jobs:
         java-version: 11
 
     - name: Maven Build
-      run: mvn clean install -U
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
+      run: mvn clean install -U
 
     - name: Prepare Cloud Build
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
