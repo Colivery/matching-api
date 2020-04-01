@@ -1,9 +1,9 @@
 package com.colivery.engine.service.poi.osm
 
-import com.colivery.engine.model.Coordinate
 import com.colivery.engine.model.PoI
 import com.colivery.engine.model.PoIType
 import com.colivery.engine.service.poi.PoiSearchService
+import com.colivery.geo.Coordinate
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.springframework.stereotype.Service

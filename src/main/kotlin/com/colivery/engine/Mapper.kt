@@ -1,9 +1,9 @@
 package com.colivery.engine
 
-import com.colivery.engine.model.Coordinate
 import com.colivery.engine.model.Order
 import com.colivery.engine.model.OrderItem
 import com.colivery.engine.model.PoIType
+import com.colivery.geo.Coordinate
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.GeoPoint
 import java.time.Instant

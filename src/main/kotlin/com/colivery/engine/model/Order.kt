@@ -1,5 +1,6 @@
 package com.colivery.engine.model
 
+import com.colivery.geo.Coordinate
 import java.time.Instant
 
 data class OrderItem(val id: String, val description: String, val status: String)

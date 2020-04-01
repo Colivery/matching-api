@@ -2,6 +2,7 @@ package com.colivery.engine.service
 
 import com.colivery.engine.TestConfig
 import com.colivery.engine.model.*
+import com.colivery.geo.Coordinate
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

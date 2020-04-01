@@ -1,9 +1,12 @@
 package com.colivery.engine.service
 
-import com.colivery.engine.model.Coordinate
 import com.colivery.engine.model.Order
 import com.colivery.engine.toOrder
 import com.colivery.engine.toOrderItem
+import com.colivery.geo.Bounds
+import com.colivery.geo.Coordinate
+import com.colivery.geo.Distance
+import com.colivery.geo.GeoHash
 import com.google.cloud.firestore.QueryDocumentSnapshot
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -18,12 +21,6 @@ class OrderService {
     @Autowired
     lateinit var fireStoreService: FireStoreService
 
-    @Autowired
-    lateinit var geoHashService: GeoHashService
-
-    @Autowired
-    lateinit var distanceService: DistanceService
-
     fun fetchOrdersByIds(orderIds: Set<String>): List<Order> {
         val orders = fireStoreService.getOrdersByIds(orderIds)
                 .mapNotNull { documentSnapshot -> filterValidOrderDocuments(documentSnapshot) }
@@ -32,7 +29,7 @@ class OrderService {
     }
 
     fun fetchAllValidOrders(startLocation: Coordinate, radius: Float): List<Order> {
-        val (minGeoHash, maxGeoHash) = geoHashService.buildMinMaxGeoHashesOfCircle(startLocation, radius)
+        val (minGeoHash, maxGeoHash) = GeoHash.buildMinMaxGeoHashesOfCircle(startLocation, radius)
 
         val orders = fireStoreService.getOrderDocumentsByStatusAndGeoHashRange(
                 FireStoreService.Status.to_be_delivered, minGeoHash, maxGeoHash)
@@ -41,9 +38,9 @@ class OrderService {
                     if (order.pickupLocation == null)
                         true
                     else
-                        distanceService.haversine(startLocation, order.pickupLocation) <= radius
+                        Distance.haversine(startLocation, order.pickupLocation) <= radius
                 }
-                .filter { order -> distanceService.haversine(startLocation, order.dropOffLocation) <= radius }
+                .filter { order -> Distance.haversine(startLocation, order.dropOffLocation) <= radius }
         orders.forEach { it.fixType() }
         return orders
     }

@@ -12,10 +12,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 
-const val USER_COLLECTION_NAME = "user"
-const val ORDER_ITEM_COLLECTION_NAME = "order_item"
-const val ORDER_COLLECTION_NAME = "order"
-
 @Configuration
 @Profile("!test")
 class FirestoreConfig {
@@ -32,6 +28,7 @@ class FirestoreConfig {
         val options = FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.getApplicationDefault())
                 .setProjectId("colivery-app")
+                .setDatabaseAuthVariableOverride(mapOf("uid" to "matching-api"))
                 .setDatabaseUrl("https://colivery-app.firebaseio.com")
 
         if (stream != null) {

@@ -1,10 +1,11 @@
 package com.colivery.engine.service
 
-import com.colivery.engine.model.Coordinate
 import com.colivery.engine.model.Order
 import com.colivery.engine.model.PoI
 import com.colivery.engine.model.PoIType
 import com.colivery.engine.service.poi.PoiSearchService
+import com.colivery.geo.Coordinate
+import com.colivery.geo.Distance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -22,7 +23,7 @@ class PoIService {
 
         val minBy = pois
                 .minBy { poi ->
-                    distanceService.haversine(start, poi.coordinate) + distanceService.haversine(poi.coordinate, dropOff)
+                    Distance.haversine(start, poi.coordinate) + Distance.haversine(poi.coordinate, dropOff)
                 }
         return minBy as PoI
     }

@@ -5,6 +5,7 @@ import com.colivery.engine.service.DistanceService
 import com.colivery.engine.service.OrderService
 import com.colivery.engine.service.PoIService
 import com.colivery.engine.service.RouteService
+import com.colivery.geo.Coordinate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
