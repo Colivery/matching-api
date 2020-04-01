@@ -1,11 +1,9 @@
 package com.colivery.engine.service
 
-import com.google.cloud.firestore.FieldPath
+import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.QueryDocumentSnapshot
 import org.springframework.stereotype.Service
-import kotlin.math.max
-
 
 const val ORDER_ITEM_COLLECTION_NAME = "items"
 const val ORDER_COLLECTION_NAME = "order"
@@ -39,10 +37,9 @@ class FireStoreService(private val firestore: Firestore) {
                 .get().get().documents
     }
 
-    fun getOrdersByIds(orderIds: Set<String>): MutableList<QueryDocumentSnapshot> {
-        return firestore.collection(ORDER_COLLECTION_NAME)
-                .whereIn(FieldPath.documentId(), orderIds.toList())
-                .get().get().documents
+    fun getOrdersByIds(orderIds: Set<String>): MutableList<DocumentSnapshot> {
+        val documentIds = orderIds.map { firestore.document("$ORDER_COLLECTION_NAME/$it") }.toTypedArray()
+        return firestore.getAll(*documentIds).get()
     }
 
     fun getOrderItems(orderId: String): MutableList<QueryDocumentSnapshot> {

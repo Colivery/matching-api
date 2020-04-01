@@ -23,14 +23,13 @@ class RouteService {
 
     private fun addOrder(routes: Set<List<Activity>>, order: Order, allPoIs: Set<PoI>): MutableSet<List<Activity>> {
         val resultRoutes: MutableSet<List<Activity>> = mutableSetOf()
-        val pickup = order.buildPickup()
         val dropOff = order.buildDropOff()
 
         for (route in routes) {
             for (pickupIndex in 1..route.size) {
                 if (order.pickupLocation != null) {
                     val routeBuffer = route.toMutableList()
-                    routeBuffer.add(pickupIndex, pickup)
+                    routeBuffer.add(pickupIndex, order.buildPickup())
                     for (dropOffIndex in (pickupIndex + 1)..(routeBuffer.size)) {
                         routeBuffer.add(dropOffIndex, dropOff)
                         resultRoutes.add(routeBuffer.toList())

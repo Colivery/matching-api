@@ -3,11 +3,10 @@ package com.colivery.engine.service
 import com.colivery.engine.model.Order
 import com.colivery.engine.toOrder
 import com.colivery.engine.toOrderItem
-import com.colivery.geo.Bounds
 import com.colivery.geo.Coordinate
 import com.colivery.geo.Distance
 import com.colivery.geo.GeoHash
-import com.google.cloud.firestore.QueryDocumentSnapshot
+import com.google.cloud.firestore.DocumentSnapshot
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,7 +44,7 @@ class OrderService {
         return orders
     }
 
-    private fun filterValidOrderDocuments(documentSnapshot: QueryDocumentSnapshot): Order? {
+    private fun filterValidOrderDocuments(documentSnapshot: DocumentSnapshot): Order? {
         return try {
             documentSnapshot.toOrder(
                     fireStoreService.getOrderItems(documentSnapshot.id)
