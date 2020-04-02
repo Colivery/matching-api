@@ -15,9 +15,9 @@ data class RouteRequest(
 
         @Min(1)
         @Max(50)
-        val range: Float = 5.0F,
+        val range: Double?,
 
         @NotNull
-        @Size(min = 1, max = 5)
+        @Size(min = 1, max = 10)
         val orderIds: Set<String>
 )

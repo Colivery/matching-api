@@ -37,7 +37,8 @@ class SearchController {
     @PostMapping("/route/orders")
     fun routeOrders(@RequestBody @Valid request: RouteRequest): RouteResponse {
         val orders = orderService.fetchOrdersByIds(request.orderIds)
-        val allPoIs = poiService.findAllPoIs(request.coordinate, request.range, orders)
+        val range = distanceService.calculateRange(orders, request.coordinate, (request.range ?: 5.0))
+        val allPoIs = poiService.findAllPoIs(request.coordinate, range, orders)
         val activitySequence = routeService.buildRoute(request.coordinate, orders, allPoIs)
 
         return RouteResponse(distanceService.calculateTotalDistance(activitySequence),

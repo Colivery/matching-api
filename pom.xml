@@ -136,10 +136,10 @@
             <id>github</id>
             <name>GitHub Colivery Apache Maven Packages</name>
             <url>https://maven.pkg.github.com/colivery/geo-lib</url>
-            <snapshots>
+            <!--<snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
-            </snapshots>
+            </snapshots> -->
         </repository>
     </repositories>
 </project>
