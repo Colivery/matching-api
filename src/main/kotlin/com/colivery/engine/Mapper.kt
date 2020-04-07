@@ -4,6 +4,7 @@ import com.colivery.engine.model.Order
 import com.colivery.engine.model.OrderItem
 import com.colivery.engine.model.PoIType
 import com.colivery.geo.Coordinate
+import com.colivery.geo.GeoHash
 import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.GeoPoint
 import java.time.Instant
@@ -14,9 +15,11 @@ fun DocumentSnapshot.toOrder(items: List<OrderItem>?) = Order(
         created = getCreated(),
         updated = getUpdated(),
         userId = notNull("user_id", this::getString),
+        pickupLocationGeohash = getString("pickup_location_geohash"),
         pickupAddress = getString("pickup_address"),
         pickupLocation = getGeoPoint("pickup_location")?.toCoordinate(),
         dropoffLocation = notNull("dropoff_location", this::getGeoPoint).toCoordinate(),
+        dropoffLocationGeohash = notNull("dropoff_location_geohash", this::getString),
         shopName = getString("shop_name"),
         shopType = PoIType.valueOf(notNull("shop_type", this::getString)),
         hint = getString("hint"),
@@ -24,6 +27,25 @@ fun DocumentSnapshot.toOrder(items: List<OrderItem>?) = Order(
         status = notNull("status", this::getString),
         items = items,
         maxPrice = getLong("max_price")
+)
+
+fun Order.pseudonymized() = Order(
+        id = id,
+        created = created,
+        updated = updated,
+        userId = userId,
+        pickupLocationGeohash = pickupLocationGeohash,
+        pickupAddress = pickupAddress,
+        pickupLocation = pickupLocation,
+        dropoffLocationGeohash = dropoffLocationGeohash,
+        dropoffLocation = GeoHash.decode(dropoffLocationGeohash),
+        shopName = shopName,
+        shopType = shopType,
+        hint = hint,
+        driverUserId = driverUserId,
+        status = status,
+        items = items,
+        maxPrice = maxPrice
 )
 
 private fun DocumentSnapshot.getUpdated(): Instant? = updateTime?.seconds?.let { Instant.ofEpochSecond(it) }

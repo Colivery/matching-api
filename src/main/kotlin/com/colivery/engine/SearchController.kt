@@ -46,7 +46,6 @@ class SearchController {
                 buildMapsLink(activitySequence))
     }
 
-    @PostMapping("/order")
     fun orders(@RequestBody @Valid request: OrderRequest): OrderResponse {
         val startLocation = request.coordinate
         val radius = request.range
