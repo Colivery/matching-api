@@ -1,6 +1,7 @@
 package com.colivery.engine.service
 
 import com.colivery.engine.model.Order
+import com.colivery.engine.pseudonymized
 import com.colivery.engine.toOrder
 import com.colivery.engine.toOrderItem
 import com.colivery.geo.Coordinate
@@ -40,7 +41,7 @@ class OrderService {
                         Distance.haversine(startLocation, order.pickupLocation) <= radius
                 }
                 .filter { order -> Distance.haversine(startLocation, order.dropoffLocation) <= radius }
-        orders.forEach { it.fixType() }
+        orders.map { order -> order.pseudonymized() }.forEach { it.fixType() }
         return orders
     }
 

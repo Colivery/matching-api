@@ -1,7 +1,10 @@
 package com.colivery.engine.service
 
 import com.colivery.engine.TestConfig
-import com.colivery.engine.model.*
+import com.colivery.engine.model.Activity
+import com.colivery.engine.model.ActivityType
+import com.colivery.engine.model.Order
+import com.colivery.engine.model.PoIType
 import com.colivery.geo.Coordinate
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -30,9 +33,12 @@ internal class RouteServiceTest {
                 "hint",
                 PoIType.supermarket,
                 Coordinate(49.1, 18.1),
+                "gwxp",
                 Coordinate(49.2, 18.2),
+                "gwxp",
+                "Weg 1, 81234 München",
                 "to_be_delivered",
-                null,
+                "",
                 emptyList(),
                 10
         )
@@ -62,9 +68,12 @@ internal class RouteServiceTest {
                 "hint",
                 PoIType.supermarket,
                 Coordinate(49.1, 18.1),
+                "gwxp",
                 Coordinate(49.4, 18.4),
+                "gwxp",
+                "Weg 1, 81234 München",
                 "to_be_delivered",
-                null,
+                "",
                 emptyList(),
                 10
         )
@@ -78,9 +87,12 @@ internal class RouteServiceTest {
                 "hint",
                 PoIType.supermarket,
                 Coordinate(49.2, 18.2),
+                "gwxp",
                 Coordinate(49.3, 18.3),
+                "gwxp",
+                "Weg 1, 81234 München",
                 "to_be_delivered",
-                null,
+                "",
                 emptyList(),
                 10
         )
